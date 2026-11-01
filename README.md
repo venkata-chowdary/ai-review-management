@@ -4,6 +4,7 @@ A QR review assistant and Google review management dashboard. The product name i
 
 - Product plan: [masterplan_updated.md](masterplan_updated.md)
 - Design system (the visual source of truth): [design-system/](design-system/README.md)
+- Progress log: [docs/progress-log.md](docs/progress-log.md)
 - Phase notes: [Phase 0 assessment](docs/phase-0-assessment.md), [Phase 1 UI](docs/phase-1-ui.md)
 
 ## Run it
@@ -14,6 +15,19 @@ npm run dev     # http://localhost:3000
 ```
 
 The UI runs on sample data, so no `.env.local` is needed yet. The Supabase session refresh in `src/proxy.ts` is skipped until the Supabase variables are set.
+
+## Local database
+
+The schema lives in `supabase/migrations/` and is rebuilt from those files plus `supabase/seed.sql`. It needs Docker Desktop running.
+
+```bash
+npm run db:start    # starts local Supabase and prints the URL and keys for .env.local
+npm run db:reset    # rebuilds the database from the migrations and the seed
+npm run db:test     # runs the row level security tests in supabase/tests/database
+npm run db:types    # regenerates src/lib/supabase/database.types.ts
+```
+
+Seed users: `owner-a@example.com` and `owner-b@example.com`, password `password123`. For a hosted project, run `npx supabase link` and then `npx supabase db push`. More detail is in [Phase 2 database](docs/phase-2-database.md).
 
 ## Routes
 
