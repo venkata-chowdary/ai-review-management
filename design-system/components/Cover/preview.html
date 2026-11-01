@@ -1,0 +1,27 @@
+<!-- @dsCard height=288 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&display=swap">
+<style>
+  html,body{margin:0;background:var(--bg-app)}
+  .cv{position:relative;width:960px;height:288px;overflow:hidden;background:var(--bg-app)}
+  .cv svg{position:absolute;left:0;top:0}
+  .nav{fill:var(--action-primary)}.pri{fill:var(--action-primary)}.sel{fill:var(--selection-bg)}.sub{fill:var(--bg-subtle)}.srf{fill:var(--bg-surface)}
+  .t{position:absolute;left:40px;bottom:32px;max-width:880px}
+  .t h1{margin:0;font:700 46px/0.95 var(--font-manrope);letter-spacing:-0.03em;color:var(--text-primary)}
+  .t p{margin:12px 0 0;font:500 14px/20px var(--font-manrope);color:var(--text-secondary)}
+</style>
+<div class="cv">
+  <!--
+    blocks: action-primary 240x128 (the blue buttons), action-primary pill 200x48, selection-bg card 180x128, bg-subtle pill 160x48, bg-surface card 176x80
+    arrangement: top band reading as the product itself: a blue slab, then controls and cards on Apple Cool
+    pattern: pill vs card, the two-shape rule (radius-pill controls, radius-card containers)
+    scales: sidebar-width 240, control-lg 48, space-3 gaps, radius-card 16, radius-pill = 24
+  -->
+  <svg width="960" height="120" viewBox="0 0 960 120" aria-hidden="true">
+    <rect class="nav" x="0" y="-16" width="240" height="128" rx="16"/>
+    <rect class="pri" x="252" y="64" width="200" height="48" rx="24"/>
+    <rect class="sel" x="464" y="-16" width="180" height="128" rx="16"/>
+    <rect class="sub" x="656" y="64" width="160" height="48" rx="24"/>
+    <rect class="srf" x="828" y="-16" width="176" height="80" rx="16"/>
+  </svg>
+  <div class="t"><h1>Review Management Design System</h1><p>Apple Cool with warmwind blue, glass navigation, glossy pill buttons, set in Manrope.</p></div>
+</div>

@@ -1,0 +1,202 @@
+@import "tailwindcss";
+/* Source of truth for colours, spacing, radii and shadows. */
+@import "../../design-system/tokens.css";
+
+@theme inline {
+  --font-sans: var(--font-manrope-next), system-ui, sans-serif;
+
+  --color-app: var(--bg-app);
+  --color-surface: var(--bg-surface);
+  --color-subtle: var(--bg-subtle);
+  --color-row-hover: var(--bg-row-hover);
+  --color-fg: var(--text-primary);
+  --color-fg-muted: var(--text-secondary);
+  --color-line: var(--border-subtle);
+  --color-control: var(--border-control);
+  --color-primary: var(--action-primary);
+  --color-primary-hover: var(--action-primary-hover);
+  --color-on-primary: var(--action-on-primary);
+  --color-primary-text: var(--action-primary-text);
+  --color-selection: var(--selection-bg);
+  --color-selection-line: var(--selection-border);
+  --color-glass: var(--glass-fill);
+  --color-glass-tint: var(--glass-tint);
+  --color-success: var(--status-success);
+  --color-success-bg: var(--status-success-bg);
+  --color-danger: var(--status-danger);
+  --color-danger-bg: var(--status-danger-bg);
+  --color-star: var(--star);
+  --color-focus: var(--focus-ring);
+  --color-focus-on-dark: var(--focus-ring-on-dark);
+
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-fg: var(--sidebar-text);
+  --color-sidebar-muted: var(--sidebar-text-muted);
+  --color-sidebar-active: var(--sidebar-active-bg);
+  --color-sidebar-active-fg: var(--sidebar-active-text);
+  --color-sidebar-raised: var(--sidebar-raised);
+  --color-sidebar-line: var(--sidebar-line);
+  --color-sidebar-count: var(--sidebar-count-bg);
+  --color-sidebar-count-fg: var(--sidebar-count-text);
+  --color-sidebar-meter: var(--sidebar-meter);
+  --color-sidebar-meter-track: var(--sidebar-meter-track);
+
+  --radius-pill: var(--radius-pill);
+  --radius-card: var(--radius-card);
+  --radius-inner: var(--radius-inner);
+  --radius-menu: var(--radius-menu);
+  --radius-row: var(--radius-row);
+
+  --shadow-button-primary: var(--shadow-button-primary);
+  --shadow-button-light: var(--shadow-button-light);
+  --shadow-glass: var(--shadow-glass);
+  --shadow-segment: var(--shadow-segment);
+
+  --blur-glass: var(--blur-glass);
+
+  /* Sizes: h-control-md, w-sidebar, max-w-qr, … */
+  --spacing-control-sm: var(--control-sm);
+  --spacing-control-md: var(--control-md);
+  --spacing-control-lg: var(--control-lg);
+  --spacing-field: var(--field);
+  --spacing-tab: var(--tab);
+  --spacing-badge: var(--badge);
+  --spacing-touch: var(--touch-min);
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-rail: var(--rail-width);
+  --spacing-topbar: var(--topbar-height);
+  --spacing-list-pane: var(--list-pane-width);
+  --container-content: var(--content-max);
+  --container-qr: var(--qr-max);
+}
+
+/* Type scale from design-system/README.md §3 (text-page-title, …). */
+@theme {
+  --text-display: 32px;
+  --text-display--line-height: 40px;
+  --text-display--letter-spacing: -0.02em;
+  --text-page-title: 24px;
+  --text-page-title--line-height: 32px;
+  --text-page-title--letter-spacing: -0.015em;
+  --text-section: 17px;
+  --text-section--line-height: 24px;
+  --text-section--letter-spacing: -0.01em;
+  --text-card-title: 15px;
+  --text-card-title--line-height: 22px;
+  --text-body: 14px;
+  --text-body--line-height: 22px;
+  --text-control: 14px;
+  --text-control--line-height: 20px;
+  --text-label: 13px;
+  --text-label--line-height: 18px;
+  --text-small: 12px;
+  --text-small--line-height: 18px;
+  --text-metric: 30px;
+  --text-metric--line-height: 36px;
+  --text-metric--letter-spacing: -0.02em;
+
+  --animate-spin-once: spin-once 0.6s ease-in-out;
+  --animate-nudge: nudge 0.5s ease-in-out;
+  --animate-wiggle: wiggle 0.5s ease-in-out;
+  --animate-draw: draw 0.45s ease-out both;
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  --animate-sheet-in: sheet-in 0.22s ease-out;
+  --animate-fade-in: fade-in 0.18s ease-out;
+
+  @keyframes spin-once {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes nudge {
+    50% { transform: translateX(2px); }
+  }
+  @keyframes wiggle {
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+  }
+  @keyframes draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes shimmer {
+    50% { opacity: 0.55; }
+  }
+  @keyframes sheet-in {
+    from { transform: translateY(16px); opacity: 0; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg-app);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 22px;
+    font-feature-settings: "tnum" 1;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: var(--text-secondary);
+  }
+}
+
+@layer components {
+  /* Frosted navigation, toolbars and badges over imagery (README §2). */
+  .glass {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    backdrop-filter: blur(var(--blur-glass));
+    box-shadow: var(--shadow-glass);
+  }
+
+  /*
+   * Icon hover motion. A parent marked `group` (or `.icon-hover` itself) plays
+   * the icon's named animation on hover / keyboard focus.
+   */
+  .group:hover .icon-spin,
+  .group:focus-visible .icon-spin {
+    animation: var(--animate-spin-once);
+  }
+  .group:hover .icon-nudge,
+  .group:focus-visible .icon-nudge {
+    animation: var(--animate-nudge);
+  }
+  .group:hover .icon-wiggle,
+  .group:focus-visible .icon-wiggle {
+    animation: var(--animate-wiggle);
+    transform-origin: 50% 10%;
+  }
+  .group:hover .icon-draw *,
+  .group:focus-visible .icon-draw * {
+    stroke-dasharray: 1;
+    animation: var(--animate-draw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .press:active {
+    transform: none !important;
+  }
+}

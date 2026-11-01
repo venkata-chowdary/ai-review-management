@@ -1,0 +1,28 @@
+<!-- @dsCard group="Foundations" height=640 width=1280 subtitle="Manrope type scale: weights 400 to 700, tabular numbers." -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-app);color:var(--text-primary);font-family:var(--font-manrope);padding:28px;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+.wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:start}
+h1{font-size:24px;line-height:32px;font-weight:700;letter-spacing:-0.015em}
+.sub{color:var(--text-secondary);font-size:13px;line-height:20px;margin:2px 0 16px}
+.scale{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-card);overflow:hidden}
+.scale div{display:grid;grid-template-columns:110px 120px minmax(0,1fr);gap:12px;align-items:baseline;padding:12px 18px;border-top:1px solid var(--border-subtle)}
+.scale div:first-child{border-top:0}
+.scale code{font:600 12px/16px ui-monospace,monospace;color:var(--text-secondary)}
+.scale small{font-size:12px;color:var(--text-secondary)}
+.panel{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-card);padding:20px;display:flex;flex-direction:column;gap:14px}
+.aa{font-size:72px;line-height:72px;font-weight:700;letter-spacing:-0.03em}
+.w{display:flex;gap:16px;font-size:20px}
+.w span small{display:block;font-size:11px;color:var(--text-secondary);font-weight:600}
+.nums{font-size:28px;font-weight:700;letter-spacing:-0.02em}
+.rule{font-size:13px;line-height:20px;color:var(--text-secondary);border-top:1px solid var(--border-subtle);padding-top:12px}
+</style>
+<div class="wrap">
+  <section><h1>Manrope type scale</h1><p class="sub">Headings and figures at 700, controls and labels at 600, reading text at 400. Tighter tracking on large sizes.</p><div class="scale"><div><code>display</code><small>32px / 40px · 700</small><span style="font-size:32px;line-height:40px;font-weight:700;letter-spacing:-0.02em;">Every review, answered well</span></div><div><code>page-title</code><small>24px / 32px · 700</small><span style="font-size:24px;line-height:32px;font-weight:700;letter-spacing:-0.02em;">Reviews</span></div><div><code>section</code><small>17px / 24px · 700</small><span style="font-size:17px;line-height:24px;font-weight:700;">Needs your attention</span></div><div><code>card-title</code><small>15px / 22px · 600</small><span style="font-size:15px;line-height:22px;font-weight:600;">Auto-reply to 4–5★</span></div><div><code>body</code><small>14px / 22px · 400</small><span style="font-size:14px;line-height:22px;font-weight:400;">Staff were apologetic and lovely.</span></div><div><code>control</code><small>14px / 20px · 600</small><span style="font-size:14px;line-height:20px;font-weight:600;">Approve & publish</span></div><div><code>label</code><small>13px / 18px · 600</small><span style="font-size:13px;line-height:18px;font-weight:600;">Location name</span></div><div><code>small</code><small>12px / 18px · 500</small><span style="font-size:12px;line-height:18px;font-weight:500;">Synced 4 min ago</span></div><div><code>metric</code><small>30px / 36px · 700</small><span style="font-size:30px;line-height:36px;font-weight:700;letter-spacing:-0.02em;">4.6</span></div></div></section>
+  <section class="panel"><p class="aa">Aa</p>
+    <div class="w"><span style="font-weight:400">Regular<small>400 · body</small></span><span style="font-weight:500">Medium<small>500 · meta</small></span><span style="font-weight:600">Semibold<small>600 · controls</small></span><span style="font-weight:700">Bold<small>700 · headings</small></span></div>
+    <p class="nums">4.6 · 1,284 · 92% · 3h 10m</p>
+    <p class="rule">Numbers use tabular figures so columns line up. Manrope is narrower than Poppins, so the review inbox fits more per line at the same size.</p></section>
+</div>

@@ -1,0 +1,170 @@
+<!-- @dsCard group="Layout options" height=820 width=1280 subtitle="Full navy sidebar, a metrics strip, and a review list beside a detail panel. Built for fast daily triage." -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-app);color:var(--text-primary);font-family:var(--font-manrope);font-size:14px;line-height:22px;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.frame{width:1280px;height:820px;overflow:hidden;background:var(--bg-app);display:flex;position:relative}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:var(--control-sm);padding:0 14px;border-radius:1000px;font-size:13px;font-weight:600;letter-spacing:-0.01em;border:0;white-space:nowrap;transition:transform .12s,background-color .15s}
+.btn:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}.btn:active{transform:none}}
+.btn.md{height:var(--control-md);padding:0 24px;font-size:14px}
+.btn .i{width:15px;height:15px}
+.btn.pri{background:var(--action-primary);color:var(--action-on-primary);box-shadow:var(--shadow-button-primary)}
+.btn.pri:hover{background:var(--action-primary-hover)}
+.btn.pri:focus-visible{outline-color:var(--action-primary);box-shadow:var(--shadow-button-primary),0 0 0 2px var(--focus-ring-on-dark) inset}
+.btn.out,.btn.light{background:var(--bg-surface);color:var(--text-primary);box-shadow:var(--shadow-button-light)}
+.btn.out:hover,.btn.light:hover{background:var(--bg-row-hover)}
+.btn.sec{background:var(--bg-subtle)}
+.btn.ghost{color:var(--text-secondary)}
+.btn.ghost:hover{color:var(--text-primary)}
+.glass{background:var(--glass-fill);-webkit-backdrop-filter:blur(var(--blur-glass));backdrop-filter:blur(var(--blur-glass));box-shadow:var(--shadow-glass)}
+.search{position:relative;width:260px}
+.search .i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-secondary)}
+.search input{width:100%;height:var(--control-md);border-radius:1000px;border:1px solid var(--border-control);background:var(--bg-surface);padding:0 14px 0 38px;font-size:13.5px;outline:none}
+.search input:focus{border-color:var(--action-primary);box-shadow:0 0 0 3px var(--selection-bg)}
+.search input::placeholder{color:var(--text-secondary)}
+.card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-card)}
+.tabs{display:inline-flex;gap:2px;padding:2px;border-radius:var(--radius-pill);background:var(--bg-subtle)}
+.tab{height:var(--tab);padding:0 14px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;color:var(--text-secondary);display:inline-flex;gap:6px;align-items:center}
+.tab .n{font-size:11.5px;font-weight:600;opacity:.8}
+.tab[aria-selected="true"]{background:var(--bg-surface);color:var(--action-primary-text);box-shadow:var(--shadow-segment)}
+.badge{display:inline-flex;align-items:center;gap:4px;height:var(--badge);padding:0 10px;border-radius:1000px;font-size:11.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;box-shadow:var(--shadow-glass)}
+.badge .i{width:12px;height:12px}
+.b-draft{color:var(--text-secondary);background:var(--glass-fill);box-shadow:none;border:1px dashed var(--border-control)}
+.b-await{color:var(--action-primary-text);background:var(--selection-bg)}
+.b-queue{color:var(--text-secondary);background:var(--bg-subtle)}
+.b-pub{color:var(--status-success);background:var(--status-success-bg)}
+.b-fail{color:var(--status-danger);background:var(--status-danger-bg)}
+.stars{display:inline-flex;gap:1px;vertical-align:-1px}
+.stars .st{width:12px;height:12px;stroke:var(--border-control);stroke-width:1.5}
+.stars .st.on{fill:var(--star);stroke:var(--star)}
+.rating{display:inline-flex;align-items:center;gap:5px;font-weight:600;font-size:12px}
+.av{width:34px;height:34px;border-radius:999px;background:var(--selection-bg);color:var(--action-primary-text);display:grid;place-items:center;font-size:11.5px;font-weight:700;flex:none}
+.meta{font-size:12px;line-height:18px;color:var(--text-secondary);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.meta span{display:inline-flex;gap:4px;align-items:center}
+.meta .i{width:13px;height:13px}
+.draft{border:1px dashed var(--border-control);border-radius:var(--radius-inner);padding:14px 16px;background:var(--bg-app)}
+.draft .lbl{font-size:12px;color:var(--text-secondary);display:flex;gap:6px;align-items:center;font-weight:600;margin-bottom:6px;justify-content:space-between}
+.draft .lbl span{display:inline-flex;gap:6px;align-items:center}
+.draft .lbl .i{width:13px;height:13px}
+.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.note{font-size:12px;line-height:17px;color:var(--text-secondary);display:flex;gap:6px;align-items:flex-start}
+.note .i{width:13px;height:13px;margin-top:2px}
+.metric .l{font-size:12px;color:var(--text-secondary);font-weight:600}
+.metric .v{font-size:28px;line-height:34px;font-weight:700;letter-spacing:-0.02em;display:flex;align-items:baseline;gap:8px}
+.metric .v small{font-size:12px;font-weight:600;color:var(--text-secondary);letter-spacing:0;display:inline-flex;gap:3px;align-items:center}
+.metric .v small .i{width:13px;height:13px}
+.spark{display:block;width:100%;height:30px;margin-top:8px}
+.spark .bar{fill:var(--bg-subtle)}
+.spark .bar.hi{fill:var(--action-primary)}
+.meter{height:6px;border-radius:999px;background:var(--bg-subtle);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--action-primary);border-radius:999px}
+.h-sec{font-size:17px;line-height:24px;font-weight:700;letter-spacing:-0.01em}
+.muted{color:var(--text-secondary)}
+.loc{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:1000px;background:var(--sidebar-raised);color:var(--sidebar-text);text-align:left;width:100%;box-shadow:var(--shadow-button-light)}
+.loc span{flex:1;font-weight:600;font-size:13px;line-height:17px}
+.loc small{display:block;font-size:11.5px;color:var(--sidebar-text-muted);font-weight:500}
+
+.side{width:var(--sidebar-width);background:var(--sidebar-bg);color:var(--sidebar-text);padding:18px 14px;display:flex;flex-direction:column;gap:2px;flex:none;-webkit-backdrop-filter:blur(var(--blur-glass));backdrop-filter:blur(var(--blur-glass));box-shadow:var(--shadow-glass);z-index:1}
+.grp{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sidebar-text-muted);font-weight:700;padding:16px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;height:36px;padding:0 12px;border-radius:1000px;color:var(--sidebar-text-muted);text-decoration:none;font-size:13.5px;font-weight:600}
+.nav a[aria-current]{background:var(--sidebar-active-bg);color:var(--sidebar-active-text)}
+.nav .count{margin-left:auto;font-size:11px;line-height:18px;padding:0 7px;border-radius:999px;background:var(--sidebar-count-bg);color:var(--sidebar-count-text);font-weight:700}
+.use{margin-top:auto;padding:14px 10px 6px;border-top:1px solid var(--sidebar-line);font-size:12px;line-height:17px}
+.use b{display:flex;justify-content:space-between;font-weight:600;margin-bottom:8px}
+.use b span{color:var(--sidebar-text-muted);font-weight:500}
+.use .meter{background:var(--sidebar-meter-track)}
+.use .meter i{background:var(--sidebar-meter);width:82%}
+.use p{color:var(--sidebar-text-muted);margin-top:6px;font-size:11.5px}
+.who-me{display:flex;gap:10px;align-items:center;padding:12px 10px 0;font-size:12.5px;font-weight:600}
+.who-me i{width:28px;height:28px;border-radius:999px;background:var(--sidebar-raised);display:grid;place-items:center;font-style:normal;font-size:11px;box-shadow:var(--shadow-button-light)}
+.who-me small{display:block;color:var(--sidebar-text-muted);font-weight:500;font-size:11.5px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--border-subtle);background:var(--bg-surface)}
+.top h1{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-0.015em}
+.top p{font-size:12.5px;color:var(--text-secondary)}
+.top .r{display:flex;gap:8px;align-items:center}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border-subtle);background:var(--bg-surface)}
+.strip div{padding:12px 28px;border-left:1px solid var(--border-subtle)}
+.strip div:first-child{border-left:0}
+.strip .l{font-size:11.5px;color:var(--text-secondary);font-weight:600}
+.strip .v{font-size:20px;line-height:26px;font-weight:700;letter-spacing:-0.01em;display:flex;gap:8px;align-items:baseline}
+.strip .v small{font-size:11.5px;font-weight:600;color:var(--text-secondary)}
+.split{flex:1;display:grid;grid-template-columns:var(--list-pane-width) minmax(0,1fr);min-height:0}
+.list{border-right:1px solid var(--border-subtle);background:var(--bg-surface);display:flex;flex-direction:column;min-height:0}
+.list .lh{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rows{padding:0 8px 8px;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.row{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;text-align:left;padding:10px;border-radius:var(--radius-menu);width:100%}
+.row:hover{background:var(--bg-row-hover)}
+.row[aria-selected="true"]{background:var(--selection-bg)}
+.row .t1{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.row b{font-size:13.5px;font-weight:700}
+.row .time{font-size:11.5px;color:var(--text-secondary);font-weight:500}
+.row .snip{font-size:12.5px;line-height:18px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:2px 0 6px}
+.row .t3{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.detail{padding:22px 28px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
+.dh{display:flex;gap:12px;align-items:flex-start}
+.dh .grow{flex:1}
+.dh b{font-size:16px;font-weight:700;display:block;line-height:22px}
+.quote{font-size:15px;line-height:24px}
+.toolbar{display:flex;justify-content:space-between;align-items:center}
+.timeline{border-top:1px solid var(--border-subtle);padding-top:14px;display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--text-secondary)}
+.timeline div{display:flex;gap:8px;align-items:center}
+.timeline .dot{width:8px;height:8px;border-radius:999px;background:var(--border-control)}
+</style>
+<div class="frame">
+<aside class="side" aria-label="Navigation">
+  <button class="loc" aria-haspopup="listbox"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>All locations<small>3 locations</small></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
+  <p class="grp">Workspace</p>
+  <nav class="nav" aria-label="Main">
+    <a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Overview</a>
+    <a href="#" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Reviews<span class="count">12</span></a>
+    <a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Insights</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM17 20h4v-3"/></svg>QR codes</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>AI replies</a>
+  </nav>
+  <p class="grp">Account</p>
+  <nav class="nav" aria-label="Account"><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg>Locations</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Billing</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a></nav>
+  <div class="use"><b>AI replies <span>412 / 500</span></b><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="500" aria-valuenow="412" aria-label="AI replies used"><i></i></div><p>Resets Nov 30</p></div>
+  <div class="who-me"><i>OW</i><span>Owner<small>Pro plan</small></span></div>
+</aside>
+<div class="main">
+  <header class="top"><div><h1>Reviews</h1><p>12 need a reply · synced 4 min ago</p></div>
+    <div class="r"><label class="search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input placeholder="Search reviews" aria-label="Search reviews"></label><button class="btn out md"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>Sync now</button></div></header>
+  <div class="strip"><div><p class="l">Average rating</p><p class="v">4.6 <small>+0.2</small></p></div><div><p class="l">New reviews · 30d</p><p class="v">48</p></div><div><p class="l">Reply rate</p><p class="v">92%</p></div><div><p class="l">Auto-reply rate</p><p class="v">64%</p></div></div>
+  <div class="split">
+    <section class="list" aria-label="Review list">
+      <div class="lh"><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">Needs reply <span class="n">12</span></button><button class="tab" role="tab" aria-selected="false">All</button><button class="tab" role="tab" aria-selected="false">Failed <span class="n">1</span></button></div><button class="btn ghost" aria-label="Filters"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button></div>
+      <div class="rows"><button class="row" aria-selected="true"><span class="av">MR</span><span>
+<span class="t1"><b>Maya R.</b><span class="time">2d</span></span><span class="snip" style="display:block">Waited almost 45 minutes for our mains on Saturday. Staff were lovely, but the kitchen couldn’t keep up.</span>
+<span class="t3"><span class="rating"><span class="stars" role="img" aria-label="2 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 2.0 <span class="muted" style="font-weight:500">· Downtown</span></span><span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span></span></span></button><button class="row" aria-selected="false"><span class="av">PS</span><span>
+<span class="t1"><b>Priya S.</b><span class="time">3h</span></span><span class="snip" style="display:block">Lovely brunch, the eggs were perfect. A little noisy around noon.</span>
+<span class="t3"><span class="rating"><span class="stars" role="img" aria-label="4 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 4.0 <span class="muted" style="font-weight:500">· Riverside</span></span><span class="badge b-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3.2 3.2"/></svg>AI draft</span></span></span></button><button class="row" aria-selected="false"><span class="av">DK</span><span>
+<span class="t1"><b>Daniel K.</b><span class="time">1d</span></span><span class="snip" style="display:block">Cold coffee and nobody came back to check on us.</span>
+<span class="t3"><span class="rating"><span class="stars" role="img" aria-label="1 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 1.0 <span class="muted" style="font-weight:500">· Airport</span></span><span class="badge b-fail"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Failed</span></span></span></button><button class="row" aria-selected="false"><span class="av">AL</span><span>
+<span class="t1"><b>Ana L.</b><span class="time">5m</span></span><span class="snip" style="display:block">Good food, slow service. Would try again on a weekday.</span>
+<span class="t3"><span class="rating"><span class="stars" role="img" aria-label="3 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 3.0 <span class="muted" style="font-weight:500">· Downtown</span></span><span class="badge b-queue"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M13 9l3 3-3 3"/></svg>Queued</span></span></span></button><button class="row" aria-selected="false"><span class="av">JT</span><span>
+<span class="t1"><b>Jon T.</b><span class="time">4d</span></span><span class="snip" style="display:block">Best flat white in the neighbourhood and the staff remember my order.</span>
+<span class="t3"><span class="rating"><span class="stars" role="img" aria-label="5 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 5.0 <span class="muted" style="font-weight:500">· Riverside</span></span><span class="badge b-pub"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Published</span></span></span></button></div>
+    </section>
+    <section class="detail" aria-label="Review detail">
+      <div class="dh"><span class="av">MR</span><div class="grow"><b>Maya R.</b><div class="meta"><span class="rating"><span class="stars" role="img" aria-label="2 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 2.0</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 16a4 4 0 0 1 7 0M9 9.5h.01M15 9.5h.01"/></svg>Negative</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg>Google · Downtown</span><span>Oct 31, 19:42</span></div></div><span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span></div>
+      <p class="quote">Waited almost 45 minutes for our mains on Saturday. Staff were apologetic and lovely, but the kitchen clearly couldn’t keep up.</p>
+      <div class="draft"><p class="lbl"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3.2 3.2"/></svg>AI draft · not published</span><span>Tone: Warm <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></span></p>
+        <p>Thank you for telling us about Saturday, Maya, and we’re sorry about the wait for your mains. That’s longer than it should be, and we’re looking at how the kitchen handles busy weekend evenings. We’re glad the team looked after you, and we’d love the chance to do better next time.</p></div>
+      <div class="toolbar"><p class="note"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Held by your rule: 3★ or lower needs approval. Publishing posts this reply on Google.</p>
+        <div class="acts"><button class="btn ghost"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>Regenerate</button><button class="btn out"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit</button><button class="btn pri md"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button></div></div>
+      <div class="timeline"><div><span class="dot"></span>Review received from Google · Oct 31, 19:42</div><div><span class="dot"></span>AI draft generated · Oct 31, 19:43</div><div><span class="dot"></span>Held for approval by rule “3★ or lower”</div></div>
+    </section>
+  </div>
+</div>
+</div>
+<script>
+document.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
+ if(t.classList.contains('tab')){[].forEach.call(t.parentNode.children,function(x){x.setAttribute('aria-selected',x===t)});}
+ if(t.classList.contains('row')){[].forEach.call(t.parentNode.querySelectorAll('.row'),function(x){x.setAttribute('aria-selected',x===t)});}
+});
+</script>

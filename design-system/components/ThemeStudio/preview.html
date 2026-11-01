@@ -1,0 +1,278 @@
+<!-- @dsCard group="Foundations" height=1320 width=1280 subtitle="Preselected: Apple Cool, warmwind blue #0071E3, light sidebar, subtle, Manrope." -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Outfit:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Manrope:wght@400;500;600&family=Urbanist:wght@400;500;600&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f2f2f0;color:#1c1c1e;font-family:var(--font-poppins);font-size:14px;line-height:22px;padding:24px;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid #1c1c1e;outline-offset:2px}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.studio{display:grid;grid-template-columns:316px minmax(0,1fr);gap:20px;align-items:start}
+.ctrl{background:#fff;border:1px solid #e4e4e0;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0}
+.ctrl h1{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-0.01em}
+.ctrl .lede{font-size:12.5px;line-height:18px;color:#5b5b60;margin-top:2px}
+.grp h2{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#5b5b60;margin-bottom:8px}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.preset{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:12px;border:1px solid #e4e4e0;font-size:12px;line-height:16px;font-weight:500;text-align:left}
+.preset[aria-pressed="true"]{border-color:#1c1c1e;box-shadow:inset 0 0 0 1px #1c1c1e}
+.preset .dots{display:flex;flex:none}
+.preset .dots i{width:14px;height:14px;border-radius:999px;box-shadow:0 0 0 1.5px #fff;display:block}
+.preset .dots i+i{margin-left:-4px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.opt{height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d6d1;font-size:12.5px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.opt i{width:12px;height:12px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);display:block}
+.opt[aria-pressed="true"]{background:#1c1c1e;color:#fff;border-color:#1c1c1e}
+.sw{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.swb{aspect-ratio:1;border-radius:999px;position:relative}
+.swb[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 4px #1c1c1e}
+.custom{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12.5px;color:#5b5b60}
+.custom input[type=color]{width:36px;height:28px;border:1px solid #d6d6d1;border-radius:8px;background:#fff;padding:2px}
+.custom code{font:500 12px/16px ui-monospace,monospace;color:#1c1c1e}
+select.font{height:34px;border-radius:999px;border:1px solid #d6d6d1;padding:0 12px;width:100%;background:#fff}
+.checks{font-size:12px;line-height:18px;display:flex;flex-direction:column;gap:4px;background:#f6f6f4;border-radius:12px;padding:10px 12px}
+.checks div{display:flex;justify-content:space-between}
+.checks b{font-weight:600}
+.checks .adj{color:#5b5b60;font-size:11.5px}
+.summary{font:500 12px/18px ui-monospace,monospace;background:#1c1c1e;color:#fff;border-radius:12px;padding:10px 12px;word-break:break-word}
+.copy{height:32px;padding:0 12px;border-radius:999px;background:#f0f0ed;font-size:12.5px;font-weight:500;display:inline-flex;gap:6px;align-items:center;margin-top:8px}
+.copy .i{width:14px;height:14px}
+
+/* ---- preview, all colours from variables set by the script ---- */
+.stage{font-family:var(--fu);background:var(--g);color:var(--ink);border-radius:22px;border:1px solid var(--ln);padding:14px;display:flex;flex-direction:column;gap:14px}
+.dash{display:grid;grid-template-columns:200px minmax(0,1fr);gap:14px;min-height:560px}
+.side{background:var(--sb);color:var(--sbink);border-radius:16px;padding:14px 10px;display:flex;flex-direction:column;gap:2px;box-shadow:inset 0 0 0 1px var(--sbline)}
+.loc{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--sbloc);margin-bottom:12px;text-align:left;color:var(--sbink)}
+.loc span{flex:1;font-weight:500;font-size:13px;line-height:17px}
+.loc small{display:block;font-size:11px;color:var(--sbdim);font-weight:400}
+.nav a{display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:10px;color:var(--sbdim);text-decoration:none;font-size:13px;font-weight:500}
+.nav a[aria-current]{background:var(--sbact);color:var(--sbactink)}
+.nav .count{margin-left:auto;font-size:11px;line-height:18px;padding:0 7px;border-radius:999px;background:var(--pb);color:var(--onp);font-weight:600}
+.use{margin-top:auto;padding:12px 10px 4px;border-top:1px solid var(--sbline);font-size:11.5px;line-height:16px}
+.use b{display:flex;justify-content:space-between;font-weight:500;margin-bottom:6px}
+.use b span{color:var(--sbdim);font-weight:400}
+.meter{height:5px;border-radius:999px;background:var(--sbloc);overflow:hidden}
+.meter i{display:block;height:100%;width:82%;background:var(--sbmeter);border-radius:999px}
+.main{display:flex;flex-direction:column;gap:12px;min-width:0}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.head h3{font-size:22px;line-height:28px;font-weight:600;letter-spacing:-0.01em}
+.head p{font-size:12.5px;color:var(--mu)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.field{position:relative;width:220px}
+.field .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mu)}
+.inp{width:100%;height:36px;border-radius:999px;border:1px solid var(--lns);background:var(--s);padding:0 12px 0 36px;font-size:13px;outline:none;color:var(--ink)}
+.inp::placeholder{color:var(--mu)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:999px;font-size:12.5px;font-weight:500;border:1px solid transparent;white-space:nowrap;color:var(--ink)}
+.btn .i{width:14px;height:14px}
+.btn.pri{background:var(--pb);color:var(--onp)}
+.btn.out{background:var(--s);border-color:var(--lns)}
+.btn.ghost{color:var(--mu)}
+.btn.lg{height:46px;padding:0 22px;font-size:14px;width:100%}
+.metrics{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
+.card{background:var(--s);border:1px solid var(--ln);border-radius:16px;padding:14px 16px}
+.metric .l{font-size:11.5px;color:var(--mu);font-weight:500}
+.metric .v{font-size:28px;line-height:34px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:baseline;gap:8px}
+.metric .v small{font-size:12px;font-weight:500;color:var(--mu);letter-spacing:0;display:inline-flex;gap:3px;align-items:center}
+.metric .v small .i{width:13px;height:13px}
+.hero{background:var(--herobg);border-color:var(--heroline);color:var(--heroink)}
+.hero .l,.hero .v small{color:var(--heromu)}
+.hero svg{display:block;width:100%;height:30px;margin-top:6px}
+.hero .bar{fill:var(--bar)}
+.hero .bar.hi{fill:var(--barhi)}
+.sub{font-size:11.5px;color:var(--mu);margin-top:2px}
+.track{height:6px;border-radius:999px;background:var(--m);overflow:hidden;margin-top:10px}
+.track i{display:block;height:100%;width:82%;background:var(--pb);border-radius:999px}
+.tabs{display:inline-flex;gap:2px;padding:2px;border-radius:999px;background:var(--m)}
+.tab{height:30px;padding:0 13px;border-radius:999px;font-size:13px;font-weight:500;color:var(--mu)}
+.tab[aria-selected="true"]{background:var(--tabsel);color:var(--tabselink);box-shadow:var(--tabshadow)}
+.rvh{display:flex;gap:10px;align-items:center}
+.av{width:32px;height:32px;border-radius:999px;background:var(--ps);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--pt);flex:none}
+.who{flex:1;min-width:0}
+.who b{font-weight:600;font-size:14px;line-height:18px;display:block}
+.meta{font-size:11.5px;line-height:16px;color:var(--mu);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.meta span{display:inline-flex;gap:3px;align-items:center}
+.meta .i{width:13px;height:13px}
+.stars{display:inline-flex;gap:1px}
+.stars .st{width:12px;height:12px;stroke:var(--lns);stroke-width:1.5}
+.stars .st.on{fill:var(--star);stroke:var(--star)}
+.txt{font-size:13px;line-height:20px;margin:8px 0 0 42px}
+.draft{margin:10px 0 0 42px;border:1px dashed var(--lns);border-radius:14px;padding:10px 12px;background:var(--g)}
+.draft .lbl{font-size:11.5px;color:var(--mu);display:flex;gap:5px;align-items:center;font-weight:500;margin-bottom:4px}
+.draft .lbl .i{width:13px;height:13px}
+.draft p{font-size:13px;line-height:20px}
+.acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.badges{display:flex;gap:5px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:999px;font-size:11.5px;font-weight:500;border:1px solid}
+.badge .i{width:12px;height:12px}
+.b-draft{color:var(--mu);border-style:dashed;border-color:var(--lns)}
+.b-await{color:var(--pt);background:var(--ps);border-color:var(--psline)}
+.b-queue{color:var(--mu);background:var(--m);border-color:var(--ln)}
+.b-pub{color:var(--ok);background:var(--okbg);border-color:transparent}
+.b-fail{color:var(--er);background:var(--erbg);border-color:transparent}
+.lower{display:grid;grid-template-columns:300px minmax(0,1fr);gap:14px;align-items:start}
+.phone{background:var(--s);border:1px solid var(--ln);border-radius:30px;padding:18px 16px;box-shadow:inset 0 0 0 5px var(--g)}
+.prog{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:14px}
+.prog i{height:4px;border-radius:999px;background:var(--m)}
+.prog i.on{background:var(--pb)}
+.biz{font-size:12px;color:var(--mu);display:flex;gap:6px;align-items:center}
+.qh{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-0.01em;margin:2px 0 10px}
+.big-stars{display:flex;justify-content:space-between;margin-bottom:12px}
+.big-stars .i{width:36px;height:36px;stroke:var(--lns);stroke-width:1.5}
+.big-stars .i.on{fill:var(--star);stroke:var(--star)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{height:36px;padding:0 12px;border:1px solid var(--lns);border-radius:999px;background:var(--s);font-size:12.5px;font-weight:500;display:inline-flex;gap:5px;align-items:center;color:var(--ink)}
+.chip .i{width:13px;height:13px;display:none}
+.chip[aria-pressed="true"]{background:var(--ps);color:var(--pt);border-color:var(--pt)}
+.chip[aria-pressed="true"] .i{display:block}
+.notes{display:flex;flex-direction:column;gap:12px}
+.notes .card h4{font-size:14px;line-height:20px;font-weight:600;margin-bottom:4px}
+.notes .card p{font-size:12.5px;line-height:19px;color:var(--mu)}
+.ramp{display:flex;gap:6px;margin-top:10px}
+.ramp span{flex:1;display:flex;flex-direction:column;gap:4px;font-size:10.5px;line-height:13px;color:var(--mu)}
+.ramp i{height:34px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--ln);display:block}
+</style>
+<div class="studio">
+  <aside class="ctrl" aria-label="Theme controls">
+    <div><h1>Theme studio</h1><p class="lede">Mix your own theme. Every combination keeps text readable automatically.</p></div>
+    <div class="grp"><h2>Start from a preset</h2><div class="presets"><button class="preset" data-preset="white|indigo|light|balanced" aria-pressed="false"><span class="dots"><i style="background:#fafafa"></i><i style="background:#4f46e5"></i></span>Indigo Clean</button><button class="preset" data-preset="apple|blue|tinted|balanced" aria-pressed="false"><span class="dots"><i style="background:#f5f5f7"></i><i style="background:#2563eb"></i></span>Blue & Cool Grey</button><button class="preset" data-preset="notion|coral|light|balanced" aria-pressed="false"><span class="dots"><i style="background:#f7f7f5"></i><i style="background:#f0533d"></i></span>Warm Coral</button><button class="preset" data-preset="white|teal|tinted|subtle" aria-pressed="false"><span class="dots"><i style="background:#fafafa"></i><i style="background:#0d9488"></i></span>Fresh Teal</button><button class="preset" data-preset="midnight|violet|dark|balanced" aria-pressed="false"><span class="dots"><i style="background:#0e1014"></i><i style="background:#7c3aed"></i></span>Violet Night</button><button class="preset" data-preset="stone|tangerine|light|bold" aria-pressed="false"><span class="dots"><i style="background:#f3f1ee"></i><i style="background:#ea580c"></i></span>Tangerine Bold</button><button class="preset" data-preset="apple|navy|brand|subtle" aria-pressed="false"><span class="dots"><i style="background:#f5f5f7"></i><i style="background:#1e3a8a"></i></span>Navy Sidebar</button><button class="preset" data-preset="white|rose|light|subtle" aria-pressed="false"><span class="dots"><i style="background:#fafafa"></i><i style="background:#e11d48"></i></span>Rose Minimal</button></div></div>
+    <div class="grp"><h2>Base</h2><div class="seg"><button class="opt" data-base="white" aria-pressed="false"><i style="background:#fafafa"></i>Pure White</button><button class="opt" data-base="apple" aria-pressed="false"><i style="background:#f5f5f7"></i>Apple Cool</button><button class="opt" data-base="notion" aria-pressed="false"><i style="background:#f7f7f5"></i>Notion Warm</button><button class="opt" data-base="stone" aria-pressed="false"><i style="background:#f3f1ee"></i>Stone</button><button class="opt" data-base="graphite" aria-pressed="false"><i style="background:#161617"></i>Graphite Dark</button><button class="opt" data-base="midnight" aria-pressed="false"><i style="background:#0e1014"></i>Midnight Dark</button></div></div>
+    <div class="grp"><h2>Brand colour</h2><div class="sw"><button class="swb" data-brand="indigo" aria-pressed="false" aria-label="Indigo" title="Indigo" style="background:#4f46e5"></button><button class="swb" data-brand="blue" aria-pressed="false" aria-label="Royal Blue" title="Royal Blue" style="background:#2563eb"></button><button class="swb" data-brand="azure" aria-pressed="false" aria-label="Azure" title="Azure" style="background:#0284c7"></button><button class="swb" data-brand="teal" aria-pressed="false" aria-label="Teal" title="Teal" style="background:#0d9488"></button><button class="swb" data-brand="emerald" aria-pressed="false" aria-label="Emerald" title="Emerald" style="background:#059669"></button><button class="swb" data-brand="green" aria-pressed="false" aria-label="Leaf" title="Leaf" style="background:#4d7c0f"></button><button class="swb" data-brand="amber" aria-pressed="false" aria-label="Amber" title="Amber" style="background:#d97706"></button><button class="swb" data-brand="tangerine" aria-pressed="false" aria-label="Tangerine" title="Tangerine" style="background:#ea580c"></button><button class="swb" data-brand="coral" aria-pressed="false" aria-label="Coral" title="Coral" style="background:#f0533d"></button><button class="swb" data-brand="rose" aria-pressed="false" aria-label="Rose" title="Rose" style="background:#e11d48"></button><button class="swb" data-brand="pink" aria-pressed="false" aria-label="Pink" title="Pink" style="background:#db2777"></button><button class="swb" data-brand="violet" aria-pressed="false" aria-label="Violet" title="Violet" style="background:#7c3aed"></button><button class="swb" data-brand="navy" aria-pressed="false" aria-label="Navy" title="Navy" style="background:#1e3a8a"></button><button class="swb" data-brand="forest" aria-pressed="false" aria-label="Forest" title="Forest" style="background:#166534"></button><button class="swb" data-brand="wine" aria-pressed="false" aria-label="Wine" title="Wine" style="background:#881337"></button><button class="swb" data-brand="plum" aria-pressed="false" aria-label="Plum" title="Plum" style="background:#6b21a8"></button><button class="swb" data-brand="espresso" aria-pressed="false" aria-label="Espresso" title="Espresso" style="background:#5b3a29"></button><button class="swb" data-brand="ink" aria-pressed="false" aria-label="Ink" title="Ink" style="background:#18181b"></button></div>
+      <label class="custom"><input type="color" id="picker" aria-label="Custom brand colour">Custom <code id="hex"></code></label></div>
+    <div class="grp"><h2>Sidebar</h2><div class="seg"><button class="opt" data-side="light" aria-pressed="false">Light</button><button class="opt" data-side="tinted" aria-pressed="false">Tinted</button><button class="opt" data-side="brand" aria-pressed="false">Brand colour</button><button class="opt" data-side="dark" aria-pressed="false">Dark</button></div></div>
+    <div class="grp"><h2>Colour intensity</h2><div class="seg"><button class="opt" data-int="subtle" aria-pressed="false">Subtle</button><button class="opt" data-int="balanced" aria-pressed="false">Balanced</button><button class="opt" data-int="bold" aria-pressed="false">Bold</button></div></div>
+    <div class="grp"><h2>Font</h2><select class="font" id="font" aria-label="Font"><option value="poppins">Poppins</option><option value="jakarta">Plus Jakarta Sans</option><option value="outfit">Outfit</option><option value="dm-sans">DM Sans</option><option value="manrope">Manrope</option><option value="urbanist">Urbanist</option></select></div>
+    <div class="grp"><h2>Contrast</h2><div class="checks" id="checks" aria-live="polite"></div></div>
+    <div class="grp"><h2>Your theme</h2><div class="summary" id="summary"></div><button class="copy" id="copybtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><span>Copy to send me</span></button></div>
+  </aside>
+  <section class="stage" id="stage" aria-label="Live preview">
+    <div class="dash">
+      <aside class="side">
+        <button class="loc" aria-haspopup="listbox"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>All locations<small>3 locations</small></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
+        <nav class="nav" aria-label="Main">
+          <a href="#" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Reviews<span class="count">12</span></a>
+          <a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Insights</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM17 20h4v-3"/></svg>QR codes</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>AI replies</a><a href="#"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Billing</a>
+        </nav>
+        <div class="use"><b>AI replies <span>412 / 500</span></b><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="500" aria-valuenow="412" aria-label="AI replies used"><i></i></div></div>
+      </aside>
+      <div class="main">
+        <div class="head"><div><h3>Reviews</h3><p>12 need a reply · synced 4 min ago</p></div>
+          <div class="row"><label class="field"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input class="inp" placeholder="Search reviews" aria-label="Search reviews"></label><button class="btn out"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>Sync now</button></div></div>
+        <div class="metrics">
+          <div class="card metric hero"><p class="l">Average rating · 30 days</p><p class="v">4.6 <small><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>+0.2</small></p><svg viewBox="0 0 256 30" preserveAspectRatio="none" role="img" aria-label="Weekly rating trend, rising"><rect class="bar" x="4" y="18" width="22" height="12" rx="5"/><rect class="bar" x="36" y="14" width="22" height="16" rx="5"/><rect class="bar" x="68" y="16.0" width="22" height="14.0" rx="5"/><rect class="bar" x="100" y="10" width="22" height="20" rx="5"/><rect class="bar" x="132" y="12.0" width="22" height="18.0" rx="5"/><rect class="bar" x="164" y="6" width="22" height="24" rx="5"/><rect class="bar" x="196" y="8.0" width="22" height="22.0" rx="5"/><rect class="bar hi" x="228" y="2" width="22" height="28" rx="5"/></svg></div>
+          <div class="card metric"><p class="l">New reviews</p><p class="v">48</p><p class="sub">12 waiting for a reply</p></div>
+          <div class="card metric"><p class="l">Reply rate</p><p class="v">92%</p><div class="track"><i></i></div></div>
+        </div>
+        <div class="row"><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">Needs reply</button><button class="tab" role="tab" aria-selected="false">All</button><button class="tab" role="tab" aria-selected="false">Published</button></div></div>
+        <article class="card">
+          <div class="rvh"><div class="av" aria-hidden="true">MR</div><div class="who"><b>Maya R.</b><div class="meta"><span><span class="stars" role="img" aria-label="2 out of 5 stars"><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i st" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span> 2.0</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 16a4 4 0 0 1 7 0M9 9.5h.01M15 9.5h.01"/></svg>Negative</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg>Google · Downtown</span><span>2 days ago</span></div></div><span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span></div>
+          <p class="txt">Waited almost 45 minutes for our mains on Saturday. Staff were lovely, but the kitchen couldn’t keep up.</p>
+          <div class="draft"><p class="lbl"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3.2 3.2"/></svg>AI draft · not published</p><p>Thank you, Maya, and we’re sorry about the wait for your mains. We’re looking at how the kitchen handles busy weekend evenings.</p>
+            <div class="acts"><button class="btn pri"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><button class="btn out"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit</button><button class="btn ghost"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>Regenerate</button></div></div>
+        </article>
+        <div class="badges"><span class="badge b-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3.2 3.2"/></svg>AI draft</span><span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span><span class="badge b-queue"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M13 9l3 3-3 3"/></svg>Queued</span><span class="badge b-pub"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Published</span><span class="badge b-fail"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Failed</span></div>
+      </div>
+    </div>
+    <div class="lower">
+      <div class="phone"><div class="prog"><i class="on"></i><i></i><i></i><i></i></div>
+        <p class="biz"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg>[Business name] · Downtown</p><p class="qh">How was your visit?</p>
+        <div class="big-stars" role="img" aria-label="2 out of 5 stars selected"><svg class="i on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></div>
+        <div class="chips"><button class="chip" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Friendly staff</button><button class="chip" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Long wait</button><button class="chip" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Quick service</button><button class="chip" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Clean space</button></div>
+        <button class="btn pri lg">Get review suggestions</button></div>
+      <div class="notes">
+        <div class="card"><h4>Colours in this theme</h4><p>Everything is derived from the base and one brand colour. Green, red and amber appear only for Published, Failed and stars.</p><div class="ramp" id="ramp"></div></div>
+        <div class="card"><h4>How to use this</h4><p>Pick a preset, then change the base, brand colour, sidebar and intensity until it feels right. Use “Copy to send me” and paste the line into chat, or just describe what you’d change.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var V={"base-white-ground": "#fafafa", "base-white-surface": "#ffffff", "base-white-muted": "#f2f2f3", "base-white-ink": "#18181b", "base-white-ink-muted": "#5f5f66", "base-white-line": "#e7e7ea", "base-white-line-strong": "#8b8b92", "base-apple-ground": "#f5f5f7", "base-apple-surface": "#ffffff", "base-apple-muted": "#ebebef", "base-apple-ink": "#1d1d1f", "base-apple-ink-muted": "#636368", "base-apple-line": "#e3e3e8", "base-apple-line-strong": "#86868b", "base-notion-ground": "#f7f7f5", "base-notion-surface": "#ffffff", "base-notion-muted": "#efefed", "base-notion-ink": "#37352f", "base-notion-ink-muted": "#6b6a66", "base-notion-line": "#e9e9e7", "base-notion-line-strong": "#8f8e8a", "base-stone-ground": "#f3f1ee", "base-stone-surface": "#fdfcfa", "base-stone-muted": "#e9e6e1", "base-stone-ink": "#292524", "base-stone-ink-muted": "#655e57", "base-stone-line": "#e2ded7", "base-stone-line-strong": "#8e877f", "base-graphite-ground": "#161617", "base-graphite-surface": "#1f1f21", "base-graphite-muted": "#2a2a2d", "base-graphite-ink": "#f5f5f7", "base-graphite-ink-muted": "#ababb0", "base-graphite-line": "#2e2e31", "base-graphite-line-strong": "#77777c", "base-midnight-ground": "#0e1014", "base-midnight-surface": "#171a20", "base-midnight-muted": "#22262e", "base-midnight-ink": "#f2f4f7", "base-midnight-ink-muted": "#9aa3af", "base-midnight-line": "#262b33", "base-midnight-line-strong": "#6b7480", "brand-indigo": "#4f46e5", "brand-blue": "#2563eb", "brand-azure": "#0284c7", "brand-teal": "#0d9488", "brand-emerald": "#059669", "brand-green": "#4d7c0f", "brand-amber": "#d97706", "brand-tangerine": "#ea580c", "brand-coral": "#f0533d", "brand-rose": "#e11d48", "brand-pink": "#db2777", "brand-violet": "#7c3aed", "brand-navy": "#1e3a8a", "brand-forest": "#166534", "brand-wine": "#881337", "brand-plum": "#6b21a8", "brand-espresso": "#5b3a29", "brand-ink": "#18181b", "status-success": "#1f7a4d", "status-success-bg": "#e3f2e9", "status-danger": "#b42318", "status-danger-bg": "#fce4e0", "star": "#b7790f", "status-success-dark": "#4cc38a", "status-success-bg-dark": "#15301f", "status-danger-dark": "#ff7a6b", "status-danger-bg-dark": "#3b1a16", "star-dark": "#e2b45e"};
+  function T(n){return V[n];}
+  var BASES=[["white", "Pure White", false], ["apple", "Apple Cool", false], ["notion", "Notion Warm", false], ["stone", "Stone", false], ["graphite", "Graphite Dark", true], ["midnight", "Midnight Dark", true]], BRANDS=[["indigo", "Indigo"], ["blue", "Royal Blue"], ["azure", "Azure"], ["teal", "Teal"], ["emerald", "Emerald"], ["green", "Leaf"], ["amber", "Amber"], ["tangerine", "Tangerine"], ["coral", "Coral"], ["rose", "Rose"], ["pink", "Pink"], ["violet", "Violet"], ["navy", "Navy"], ["forest", "Forest"], ["wine", "Wine"], ["plum", "Plum"], ["espresso", "Espresso"], ["ink", "Ink"]], KEYS=["ground", "surface", "muted", "ink", "ink-muted", "line", "line-strong"];
+  var FN={poppins:'Poppins',jakarta:'Plus Jakarta Sans',outfit:'Outfit','dm-sans':'DM Sans',manrope:'Manrope',urbanist:'Urbanist'};
+  function rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(function(c){return c+c}).join('');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function hex(a){return '#'+a.map(function(v){return Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')}).join('')}
+  function mix(a,b,t){var A=rgb(a),B=rgb(b);return hex(A.map(function(v,i){return v*t+B[i]*(1-t)}))}
+  function lum(h){return rgb(h).map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)}).reduce(function(s,v,i){return s+v*[0.2126,0.7152,0.0722][i]},0)}
+  function cr(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05)}
+  function ensure(c,bg,target,toward){for(var t=0;t<=1.0001;t+=0.04){var x=mix(toward,c,t);if(cr(x,bg)>=target)return x;}return toward}
+  var st={base:'white',brand:T('brand-indigo'),brandId:'indigo',side:'light',int:'balanced',font:'poppins'};
+  var stage=document.getElementById('stage');
+  function set(n,v){stage.style.setProperty('--'+n,v)}
+  function apply(){
+    var b={};KEYS.forEach(function(k){b[k]=T('base-'+st.base+'-'+k)});
+    var dark=BASES.filter(function(x){return x[0]===st.base})[0][2];
+    var P=st.brand, white='#ffffff', black='#111113';
+    // button fill: keep the hue; darken (light bases) until white text reads 4.5:1
+    var pb=P, onp=white;
+    if(cr(white,P)<4.5){ if(dark && cr(black,P)>=4.5){onp=black;} else {pb=ensure(P,white,4.5,'#000000');} }
+    var pt=ensure(P,b.surface,4.5,dark?white:'#000000');
+    var ps=mix(P,b.surface,dark?0.22:0.11);
+    pt=ensure(pt,ps,4.5,dark?white:'#000000');
+    var psline=mix(P,b.surface,dark?0.45:0.32);
+    Object.keys(b).forEach(function(k){set({ground:'g',surface:'s',muted:'m',ink:'ink','ink-muted':'mu',line:'ln','line-strong':'lns'}[k],b[k])});
+    set('pb',pb);set('onp',onp);set('pt',pt);set('ps',ps);set('psline',psline);
+    set('ok',T(dark?'status-success-dark':'status-success'));set('okbg',T(dark?'status-success-bg-dark':'status-success-bg'));
+    set('er',T(dark?'status-danger-dark':'status-danger'));set('erbg',T(dark?'status-danger-bg-dark':'status-danger-bg'));
+    set('star',T(dark?'star-dark':'star'));
+    // sidebar
+    var sb,sbink,filled=false;
+    if(st.side==='light'){sb=b.ground===b.surface?b.muted:b.ground;sbink=b.ink;}
+    else if(st.side==='tinted'){sb=mix(P,b.ground,dark?0.14:0.08);sbink=b.ink;}
+    else if(st.side==='brand'){sb=dark?mix(P,b.ground,0.35):mix(P,'#0b0b0c',0.72);sbink=cr(white,sb)>=cr(black,sb)?'#f7f7f8':black;filled=true;}
+    else {sb=dark?'#0a0a0b':'#151517';sbink='#f2f2f4';filled=true;}
+    var sbdim=mix(sbink,sb,0.72);if(cr(sbdim,sb)<4.5)sbdim=ensure(sbdim,sb,4.5,sbink);
+    set('sb',sb);set('sbink',sbink);set('sbdim',sbdim);
+    set('sbline',filled?mix(sbink,sb,0.14):b.line);
+    set('sbloc',filled?mix(sbink,sb,0.10):b.surface);
+    if(filled){set('sbact',mix(sbink,sb,0.13));set('sbactink',sbink);set('sbmeter',cr(P,sb)>=3?P:mix(sbink,sb,0.85));}
+    else{var a=mix(P,sb,dark?0.24:0.13);set('sbact',a);set('sbactink',ensure(P,a,4.5,dark?white:'#000000'));set('sbmeter',pb);}
+    // intensity
+    if(st.int==='subtle'){set('herobg',b.surface);set('heroline',b.line);set('heroink',b.ink);set('heromu',b['ink-muted']);set('bar',b.muted);set('barhi',pb);
+      set('tabsel',b.surface);set('tabselink',b.ink);set('tabshadow','0 0 0 1px '+b.line);}
+    else if(st.int==='balanced'){set('herobg',ps);set('heroline',psline);set('heroink',b.ink);set('heromu',ensure(b['ink-muted'],ps,4.5,dark?white:'#000000'));set('bar',mix(P,ps,0.3));set('barhi',pb);
+      set('tabsel',pb);set('tabselink',onp);set('tabshadow','none');}
+    else {set('herobg',pb);set('heroline',pb);set('heroink',onp);set('heromu',mix(onp,pb,0.8));set('bar',mix(onp,pb,0.3));set('barhi',onp);
+      set('tabsel',pb);set('tabselink',onp);set('tabshadow','none');}
+    set('fu','"'+FN[st.font]+'", system-ui, sans-serif');
+    // controls state
+    [].forEach.call(document.querySelectorAll('[data-base]'),function(e){e.setAttribute('aria-pressed',e.dataset.base===st.base)});
+    [].forEach.call(document.querySelectorAll('[data-brand]'),function(e){e.setAttribute('aria-pressed',e.dataset.brand===st.brandId)});
+    [].forEach.call(document.querySelectorAll('[data-side]'),function(e){e.setAttribute('aria-pressed',e.dataset.side===st.side)});
+    [].forEach.call(document.querySelectorAll('[data-int]'),function(e){e.setAttribute('aria-pressed',e.dataset.int===st.int)});
+    [].forEach.call(document.querySelectorAll('[data-preset]'),function(e){var p=e.dataset.preset.split('|');e.setAttribute('aria-pressed',p[0]===st.base&&p[1]===st.brandId&&p[2]===st.side&&p[3]===st.int)});
+    document.getElementById('picker').value=P;
+    document.getElementById('hex').textContent=P.toUpperCase();
+    // checks
+    var ck=document.getElementById('checks');
+    ck.innerHTML='<div><span>Button text</span><b>'+cr(onp,pb).toFixed(1)+':1</b></div>'+
+      '<div><span>Brand text on cards</span><b>'+cr(pt,b.surface).toFixed(1)+':1</b></div>'+
+      '<div><span>Sidebar text</span><b>'+cr(sbdim,sb).toFixed(1)+':1</b></div>'+
+      (pb!==P||pt!==P?'<p class="adj">Shades adjusted automatically to keep text readable. Button '+pb.toUpperCase()+', text '+pt.toUpperCase()+'.</p>':'<p class="adj">No adjustment needed.</p>');
+    var bname=BASES.filter(function(x){return x[0]===st.base})[0][1];
+    var brname=(BRANDS.filter(function(x){return x[0]===st.brandId})[0]||[0,'Custom'])[1];
+    document.getElementById('summary').textContent='Base: '+bname+' · Brand: '+brname+' '+P.toUpperCase()+' · Sidebar: '+st.side+' · Intensity: '+st.int+' · Font: '+FN[st.font];
+    var r=document.getElementById('ramp');
+    r.innerHTML=[['Page',b.ground],['Card',b.surface],['Soft tint',ps],['Brand',pb],['Brand text',pt],['Sidebar',sb]].map(function(x){return '<span><i style="background:'+x[1]+'"></i>'+x[0]+'<br>'+x[1].toUpperCase()+'</span>'}).join('');
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('button');if(!t)return;
+    if(t.dataset.base){st.base=t.dataset.base;}
+    else if(t.dataset.brand){st.brandId=t.dataset.brand;st.brand=T('brand-'+st.brandId);}
+    else if(t.dataset.side){st.side=t.dataset.side;}
+    else if(t.dataset.int){st.int=t.dataset.int;}
+    else if(t.dataset.preset){var p=t.dataset.preset.split('|');st.base=p[0];st.brandId=p[1];st.brand=T('brand-'+p[1]);st.side=p[2];st.int=p[3];}
+    else if(t.classList.contains('chip')){t.setAttribute('aria-pressed',t.getAttribute('aria-pressed')==='true'?'false':'true');return;}
+    else if(t.classList.contains('tab')){[].forEach.call(t.parentNode.children,function(x){x.setAttribute('aria-selected',x===t)});return;}
+    else if(t.id==='copybtn'){var s=document.getElementById('summary').textContent;try{navigator.clipboard.writeText(s);t.lastChild.textContent='Copied';}catch(err){t.lastChild.textContent='Select the text above to copy';}return;}
+    else return;
+    apply();
+  });
+  document.getElementById('picker').addEventListener('input',function(e){st.brand=e.target.value.toLowerCase();st.brandId='custom';apply();});
+  document.getElementById('font').addEventListener('change',function(e){st.font=e.target.value;apply();});
+  st.base='apple';st.brandId='custom';st.brand='#0071e3';st.side='light';st.int='subtle';st.font='manrope';document.getElementById('font').value='manrope';
+  apply();
+})();
+</script>

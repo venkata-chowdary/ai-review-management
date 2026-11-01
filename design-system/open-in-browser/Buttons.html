@@ -1,0 +1,217 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Buttons</title><style>/* Review Management Design System — generated from tokens.json */
+:root, [data-theme="light"] {
+  --bg-app: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-subtle: #ebebef;
+  --bg-row-hover: #f7f7f7;
+  --text-primary: #1d1d1f;
+  --text-secondary: #636368;
+  --border-subtle: #e3e3e8;
+  --border-control: #86868b;
+  --action-primary: #0071e3;
+  --action-primary-hover: #0063c8;
+  --action-on-primary: #ffffff;
+  --action-primary-text: #0063c7;
+  --selection-bg: #e6f1fc;
+  --selection-border: #b3d4f6;
+  --glass-fill: rgba(255, 255, 255, 0.72);
+  --glass-tint: rgba(255, 255, 255, 0.55);
+  --sidebar-bg: var(--glass-fill);
+  --sidebar-text: #1d1d1f;
+  --sidebar-text-muted: #636368;
+  --sidebar-active-bg: var(--selection-bg);
+  --sidebar-active-text: var(--action-primary-text);
+  --sidebar-raised: #ffffff;
+  --sidebar-line: #e3e3e8;
+  --sidebar-count-bg: var(--action-primary);
+  --sidebar-count-text: #ffffff;
+  --sidebar-meter: var(--action-primary);
+  --sidebar-meter-track: #ebebef;
+  --focus-ring: #0071e3;
+  --focus-ring-on-dark: #ffffff;
+  --status-success: #1f7a4d;
+  --status-success-bg: #e3f2e9;
+  --status-danger: #b42318;
+  --status-danger-bg: #fce4e0;
+  --star: #b7790f;
+  --shadow-button-primary: inset 0 -4px 20px -4px rgba(255, 255, 255, 0.2), 0 3px 6px -1px rgba(23, 26, 29, 0.1), inset 0 1.5px 1px 0 #0071e3, inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.6);
+  --shadow-button-light: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px -0.5px rgba(23, 26, 29, 0.1), 0 0 0 0.8px rgba(23, 26, 29, 0.06);
+  --shadow-glass: 0 2px 12px -4px rgba(23, 26, 29, 0.1), inset 0.5px 0 0 0 rgba(23, 26, 29, 0.1), inset -0.5px 0 0 0 rgba(23, 26, 29, 0.1), inset 0 1.25px 0 -0.5px rgba(255, 255, 255, 0.3), inset 0 -1.25px 0 -0.5px rgba(255, 255, 255, 0.3);
+  --shadow-segment: 0 1px 2px -0.5px rgba(23, 26, 29, 0.12), 0 0 0 0.8px rgba(23, 26, 29, 0.06);
+}
+:root {
+  --space-1: 4px;
+  --space-1\.5: 6px;
+  --space-2: 8px;
+  --space-2\.5: 10px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --radius-pill: 999px;
+  --radius-card: 16px;
+  --radius-inner: 14px;
+  --radius-menu: 12px;
+  --radius-row: 10px;
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: 48px;
+  --field: 44px;
+  --tab: 32px;
+  --badge: 22px;
+  --touch-min: 44px;
+  --sidebar-width: 240px;
+  --rail-width: 76px;
+  --topbar-height: 64px;
+  --list-pane-width: 400px;
+  --content-max: 1200px;
+  --qr-max: 440px;
+  --blur-glass: 18px;
+  --font-manrope: "Manrope", system-ui, sans-serif;
+  --font-poppins: "Poppins", system-ui, sans-serif;
+  --font-jakarta: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+  --font-dm-sans: "DM Sans", system-ui, sans-serif;
+  --font-urbanist: "Urbanist", system-ui, sans-serif;
+}
+.display { font-family: var(--font-manrope); font-size: 32px; line-height: 40px; font-weight: 700; }
+.page-title { font-family: var(--font-manrope); font-size: 24px; line-height: 32px; font-weight: 700; }
+.section { font-family: var(--font-manrope); font-size: 17px; line-height: 24px; font-weight: 700; }
+.card-title { font-family: var(--font-manrope); font-size: 15px; line-height: 22px; font-weight: 600; }
+.body { font-family: var(--font-manrope); font-size: 14px; line-height: 22px; font-weight: 400; }
+.control { font-family: var(--font-manrope); font-size: 14px; line-height: 20px; font-weight: 600; }
+.label { font-family: var(--font-manrope); font-size: 13px; line-height: 18px; font-weight: 600; }
+.small { font-family: var(--font-manrope); font-size: 12px; line-height: 18px; font-weight: 500; }
+.metric { font-family: var(--font-manrope); font-size: 30px; line-height: 36px; font-weight: 700; }
+</style></head><body><!-- @dsCard group="Components" height=900 width=1280 subtitle="Glossy blue pill buttons, white lift buttons, chip-round filters and glass status badges." -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-app);color:var(--text-primary);font-family:var(--font-manrope);font-size:14px;line-height:22px;padding:28px;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.i{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+.panel{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-card);padding:22px;display:flex;flex-direction:column;gap:20px}
+h1{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-0.015em}
+.lede{font-size:13px;line-height:20px;color:var(--text-secondary);margin-top:2px}
+h2{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:10px}
+.row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+figure{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+figcaption{font-size:11px;line-height:14px;color:var(--text-secondary);font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:var(--control-md);padding:0 24px;border-radius:1000px;font-size:14px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;transition:transform .12s,background-color .15s}
+.btn:active,.btn.pressed{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}.btn:active,.btn.pressed{transform:none}.spin{animation:none!important}}
+.btn.sm{height:var(--control-sm);padding:0 14px;font-size:13px}
+.btn.lg{height:var(--control-lg);padding:0 28px;font-size:15px}
+.btn.pri{background:var(--action-primary);color:var(--action-on-primary);box-shadow:var(--shadow-button-primary)}
+.btn.pri:hover,.btn.pri.hover{background:var(--action-primary-hover)}
+.btn.light{background:var(--bg-surface);color:var(--text-primary);box-shadow:var(--shadow-button-light)}
+.btn.light:hover,.btn.light.hover{background:var(--bg-row-hover)}
+.btn.text{color:var(--text-secondary);padding:0 8px}
+.btn.text:hover{color:var(--text-primary)}
+.btn.danger{background:var(--bg-surface);color:var(--status-danger);box-shadow:var(--shadow-button-light)}
+.btn.focus{outline:2px solid var(--focus-ring);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.btn.icon{width:var(--control-md);padding:0}
+.btn.icon.sm{width:var(--control-sm)}
+.spin{animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.chip{display:inline-flex;align-items:center;gap:6px;height:var(--control-sm);padding:0 14px;border-radius:1000px;font-size:13px;font-weight:600;background:var(--bg-surface);box-shadow:var(--shadow-button-light)}
+.chip .n{font-size:11.5px;color:var(--text-secondary)}
+.chip[aria-pressed="true"]{background:var(--selection-bg);color:var(--action-primary-text);box-shadow:inset 0 0 0 1px var(--selection-border)}
+.chip[aria-pressed="true"] .n{color:var(--action-primary-text)}
+.chip.lg{height:var(--field);padding:0 16px;font-size:14px}
+.badge{display:inline-flex;align-items:center;gap:5px;height:var(--badge);padding:0 10px;border-radius:1000px;font-size:11.5px;font-weight:600;letter-spacing:-0.01em;box-shadow:var(--shadow-glass);white-space:nowrap}
+.badge .i{width:12px;height:12px}
+.b-draft{color:var(--text-secondary);background:var(--glass-fill);box-shadow:none;border:1px dashed var(--border-control)}
+.b-await{color:var(--action-primary-text);background:var(--selection-bg)}
+.b-queue{color:var(--text-secondary);background:var(--bg-subtle)}
+.b-pub{color:var(--status-success);background:var(--status-success-bg)}
+.b-fail{color:var(--status-danger);background:var(--status-danger-bg)}
+.b-live{color:var(--text-primary);background:var(--glass-tint);-webkit-backdrop-filter:blur(var(--blur-glass));backdrop-filter:blur(var(--blur-glass))}
+.b-live .dot{width:7px;height:7px;border-radius:999px;background:var(--status-success);box-shadow:0 0 0 3px var(--status-success-bg)}
+.tabs{display:inline-flex;gap:2px;padding:2px;border-radius:1000px;background:var(--bg-subtle)}
+.tab{height:var(--tab);padding:0 14px;border-radius:1000px;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.tab[aria-selected="true"]{background:var(--bg-surface);color:var(--action-primary-text);box-shadow:var(--shadow-segment)}
+.scene{position:relative;border-radius:var(--radius-card);overflow:hidden;min-height:520px;background:#dfe6ee;padding:22px;display:flex;flex-direction:column;gap:16px;justify-content:flex-end}
+.scene .blob{position:absolute;border-radius:999px;filter:blur(40px)}
+.scene .b1{width:340px;height:260px;background:#b9d3ef;left:-60px;top:-40px}
+.scene .b2{width:300px;height:240px;background:#f4f1ec;right:-40px;top:60px}
+.scene .b3{width:260px;height:200px;background:#c9dbe9;left:120px;bottom:-40px}
+.scene .label{position:absolute;left:22px;top:22px}
+.glass{background:var(--glass-fill);-webkit-backdrop-filter:blur(var(--blur-glass));backdrop-filter:blur(var(--blur-glass));box-shadow:var(--shadow-glass)}
+.gcard{position:relative;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.gcard p{font-size:13.5px;line-height:21px}
+.gcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gcard .who{font-weight:700;font-size:14px}
+.gcard .stars{display:inline-flex;gap:1px;color:var(--star)}
+.gcard .stars .i{width:13px;height:13px;fill:currentColor;stroke:currentColor}
+.toolbar{position:relative;align-self:center;display:inline-flex;gap:6px;padding:6px;border-radius:1000px}
+.notes{font-size:12.5px;line-height:19px;color:var(--text-secondary);border-top:1px solid var(--border-subtle);padding-top:14px}
+.notes b{color:var(--text-primary);font-weight:700}
+</style>
+<div class="wrap">
+  <section class="panel" aria-label="Buttons and chips">
+    <div><h1>Buttons &amp; chips</h1><p class="lede">Fully round (1000px) pills. The blue button has the glossy inner highlight; white buttons lift with a soft shadow and hairline ring; badges get the glass rim.</p></div>
+    <div><h2>Primary · glossy blue</h2><div class="row">
+      <figure><button class="btn pri sm">Small</button><figcaption>32px</figcaption></figure>
+      <figure><button class="btn pri">Get suggestions</button><figcaption>40px · default</figcaption></figure>
+      <figure><button class="btn pri lg">Continue to Google</button><figcaption>48px · QR page</figcaption></figure>
+    </div></div>
+    <div><h2>States</h2><div class="row">
+      <figure><button class="btn pri"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><figcaption>Default</figcaption></figure>
+      <figure><button class="btn pri hover"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><figcaption>Hover</figcaption></figure>
+      <figure><button class="btn pri pressed"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><figcaption>Pressed · 97%</figcaption></figure>
+      <figure><button class="btn pri focus"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><figcaption>Keyboard focus</figcaption></figure>
+      <figure><button class="btn pri" aria-busy="true"><svg class="i spin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>Publishing…</button><figcaption>Loading</figcaption></figure>
+      <figure><button class="btn pri" disabled>Publish</button><figcaption>Disabled</figcaption></figure>
+    </div></div>
+    <div><h2>Light · text · destructive · icon</h2><div class="row">
+      <figure><button class="btn light"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit reply</button><figcaption>Light</figcaption></figure>
+      <figure><button class="btn light"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download QR</button><figcaption>Light with icon</figcaption></figure>
+      <figure><button class="btn text"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/></svg>Regenerate</button><figcaption>Text</figcaption></figure>
+      <figure><button class="btn danger"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Discard draft</button><figcaption>Destructive</figcaption></figure>
+      <figure><button class="btn light icon" aria-label="More"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button><figcaption>Icon</figcaption></figure>
+      <figure><button class="btn pri icon" aria-label="Add location"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><figcaption>Icon primary</figcaption></figure>
+    </div></div>
+    <div><h2>Chips · filters and QR attributes</h2><div class="row">
+      <button class="chip" aria-pressed="true">Needs reply <span class="n">12</span></button>
+      <button class="chip" aria-pressed="false">All <span class="n">48</span></button>
+      <button class="chip" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Rating</button>
+      <button class="chip" aria-pressed="false">Downtown</button>
+      <button class="chip lg" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Friendly staff</button>
+      <button class="chip lg" aria-pressed="false">Long wait</button>
+    </div></div>
+    <div><h2>Glass status badges</h2><div class="row">
+      <span class="badge b-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3.2 3.2"/></svg>AI draft</span>
+      <span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span>
+      <span class="badge b-queue"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M13 9l3 3-3 3"/></svg>Queued</span>
+      <span class="badge b-pub"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Published</span>
+      <span class="badge b-fail"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Failed</span>
+      <span class="badge b-live"><span class="dot"></span>Google connected</span>
+    </div></div>
+    <div><h2>Tabs</h2><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">Needs reply</button><button class="tab" role="tab" aria-selected="false">All</button><button class="tab" role="tab" aria-selected="false">Published</button></div></div>
+  </section>
+  <section class="scene" aria-label="Glass over imagery">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <span class="badge b-live label"><span class="dot"></span>Glass shows best over imagery</span>
+    <article class="gcard glass">
+      <div class="top"><span class="who">Maya R.</span><span class="badge b-await"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Awaiting approval</span></div>
+      <span class="stars" role="img" aria-label="2 out of 5 stars"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span>
+      <p>Thank you for telling us about Saturday, Maya, and we’re sorry about the wait for your mains.</p>
+      <div class="row"><button class="btn pri sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Approve &amp; publish</button><button class="btn light sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit</button></div>
+    </article>
+    <div class="toolbar glass" role="toolbar" aria-label="QR actions"><button class="btn light sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM17 20h4v-3"/></svg>Preview</button><button class="btn light sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download</button><button class="btn pri sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Open page</button></div>
+    <p class="notes" style="position:relative;background:var(--glass-fill);border-radius:14px;padding:12px 14px;border:0"><b>Where glass is used:</b> the sidebar or top bar, floating toolbars, and badges over photos or QR previews. Content cards stay solid white with hairlines so text is always crisp.</p>
+  </section>
+</div>
+<script>
+document.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
+ if(t.classList.contains('chip')){t.setAttribute('aria-pressed',t.getAttribute('aria-pressed')==='true'?'false':'true');}
+ if(t.classList.contains('tab')){[].forEach.call(t.parentNode.children,function(x){x.setAttribute('aria-selected',x===t)});}
+});
+</script></body></html>
