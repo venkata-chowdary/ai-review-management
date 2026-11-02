@@ -2,10 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon } from "@/components/icons/Icon";
 
-// Layout pieces for the signed-out pages. Provisional design composed from
-// the system: one short column that fits the screen without scrolling.
-
-/** Working label until the product name and logo are decided. */
+// Working label until the product name and logo are decided.
 export function ProductLabel() {
   return (
     <Link href="/sign-in" className="inline-flex items-center gap-2.5 rounded-pill pr-2 text-[14px] font-bold tracking-[-0.01em]">
@@ -17,7 +14,6 @@ export function ProductLabel() {
   );
 }
 
-/** Page title, one short line, the form, and an optional link underneath. */
 export function AuthCard({
   title,
   description,

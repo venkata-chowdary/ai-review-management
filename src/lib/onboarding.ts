@@ -1,9 +1,8 @@
 import type { Tone } from "@/lib/mock/types";
 
-// Onboarding steps, in order. Each step is its own route under /onboarding.
 export const onboardingSteps = [
   { slug: "business", label: "Your business", hint: "Name and type" },
-  { slug: "branch", label: "First branch", hint: "Name and Maps link" },
+  { slug: "branch", label: "First branch", hint: "Name and review link" },
   { slug: "google", label: "Connect Google", hint: "Optional" },
   { slug: "replies", label: "AI replies", hint: "Style and approval" },
   { slug: "qr", label: "Your QR code", hint: "Ready to print" },
@@ -15,29 +14,27 @@ export function stepHref(slug: StepSlug) {
   return `/onboarding/${slug}`;
 }
 
-/** Answers carried between steps. Provisional: kept in sessionStorage, not saved to the database. */
 export type OnboardingDraft = {
   businessName?: string;
   businessType?: string;
-  branch?: { name: string; googleMapsUrl: string };
+  branch?: { id: string; name: string; googleMapsUrl: string; googleReviewUrl: string; qrCode: string };
   googleConnected?: boolean;
   tone?: Tone;
   approvalRule?: "2" | "3" | "all";
   autoPublish?: boolean;
 };
 
-/** Google Maps share links: maps.app.goo.gl, goo.gl/maps, g.page and google.com/maps. */
 export function isGoogleMapsUrl(value: string) {
   try {
-    const u = new URL(value.trim());
-    if (u.protocol !== "https:") return false;
-    const host = u.hostname.replace(/^www\./, "");
+    const url = new URL(value.trim());
+    if (url.protocol !== "https:") return false;
+    const host = url.hostname.replace(/^www\./, "");
     return (
       host === "maps.app.goo.gl" ||
       host === "g.page" ||
       host === "maps.google.com" ||
-      (host === "goo.gl" && u.pathname.startsWith("/maps")) ||
-      (/^google\.[a-z.]+$/.test(host) && u.pathname.startsWith("/maps"))
+      (host === "goo.gl" && url.pathname.startsWith("/maps")) ||
+      (/^google\.[a-z.]+$/.test(host) && url.pathname.startsWith("/maps"))
     );
   } catch {
     return false;

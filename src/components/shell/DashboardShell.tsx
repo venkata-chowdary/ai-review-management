@@ -23,7 +23,7 @@ export async function DashboardShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ShellProvider branches={branches.map((b) => ({ id: b.id, name: b.name, hasMapsLink: !!b.googleMapsUrl }))}>
+    <ShellProvider branches={branches.map((b) => ({ id: b.id, name: b.name, hasReviewLink: !!b.googleReviewUrl }))}>
       <Sidebar counts={counts} usage={usage} account={account} />
       <IconRail counts={counts} usage={usage} account={account} />
       <div id="main" className="flex min-w-0 flex-1 flex-col pb-24 md:pb-0">

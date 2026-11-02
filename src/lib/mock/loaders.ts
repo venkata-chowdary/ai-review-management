@@ -41,10 +41,6 @@ export function getBranch(id: string | undefined): Branch | undefined {
   return branches.find((l) => l.id === id);
 }
 
-export function getBranchByQrCode(code: string): Branch | undefined {
-  return branches.find((l) => l.qrCode === code);
-}
-
 function forBranch(list: Review[], branchId?: string) {
   return branchId && getBranch(branchId) ? list.filter((r) => r.branchId === branchId) : list;
 }

@@ -55,12 +55,12 @@ async function BranchesContent() {
                 <div className="min-w-0">
                   <p className="font-bold">{b.name}</p>
                   <p className="truncate text-[12px] text-fg-muted">
-                    {b.googleMapsUrl ? (
-                      <a href={b.googleMapsUrl} target="_blank" rel="noreferrer" className="hover:text-fg hover:underline">
-                        View on Google Maps
+                    {b.googleReviewUrl ? (
+                      <a href={b.googleReviewUrl} target="_blank" rel="noreferrer" className="hover:text-fg hover:underline">
+                        Google review link
                       </a>
                     ) : (
-                      "No Google Maps link yet"
+                      "No Google review link yet"
                     )}
                   </p>
                 </div>

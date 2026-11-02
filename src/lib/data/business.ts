@@ -18,7 +18,6 @@ export type Business = {
   aiAutoPublish: boolean;
 };
 
-/** The signed-in user and their business, or null when signed out. */
 export const getOwner = cache(async () => {
   const session = await verifySession();
   if (!session) return null;
@@ -43,14 +42,15 @@ export const getOwner = cache(async () => {
   return { user: session, business };
 });
 
-/** For pages that need an owner: signed-out visitors go to sign-in. */
 export async function requireOwner() {
   const owner = await getOwner();
-  if (!owner) redirect("/sign-in");
-  return owner;
+  if (owner) return owner;
+
+  // A login with no business behind it belongs to a deleted account, so clear it.
+  if (await verifySession()) redirect("/auth/sign-out");
+  redirect("/sign-in");
 }
 
-/** For the dashboard: owners who have not finished setup go back to onboarding. */
 export async function requireOnboardedOwner() {
   const owner = await requireOwner();
   if (owner.business.onboardingStep !== "done") redirect("/onboarding");
@@ -59,7 +59,6 @@ export async function requireOnboardedOwner() {
 
 const order: StepSlug[] = ["business", "branch", "google", "replies", "qr"];
 
-/** Sends the owner back to their current step when they open one that is further ahead. */
 export async function requireStepAccess(step: StepSlug) {
   const owner = await requireOwner();
   const current = owner.business.onboardingStep;
@@ -73,7 +72,7 @@ export function initialsOf(name: string, fallback: string) {
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
+    .map((word) => word[0]!.toUpperCase())
     .join("");
   return letters || fallback.slice(0, 1).toUpperCase() || "?";
 }

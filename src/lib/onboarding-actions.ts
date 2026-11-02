@@ -12,7 +12,8 @@ import {
   businessName,
   businessType,
   fieldErrors,
-  mapsUrl,
+  optionalMapsUrl,
+  reviewUrl,
   toneValues,
   type ActionState,
 } from "@/lib/validation";
@@ -33,10 +34,10 @@ async function save(userId: string, current: string, target: StepSlug | "done", 
   return !error;
 }
 
-const text = (fd: FormData, key: string) => String(fd.get(key) ?? "");
+const text = (formData: FormData, key: string) => String(formData.get(key) ?? "");
 const failed: ActionState = { error: "We could not save this. Please try again." };
 
-export async function saveBusiness(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveBusiness(previousState: ActionState, formData: FormData): Promise<ActionState> {
   const { user, business } = await requireOwner();
   const values = { name: text(formData, "name"), type: text(formData, "type") };
   const parsed = z.object({ name: businessName, type: businessType }).safeParse(values);
@@ -47,15 +48,15 @@ export async function saveBusiness(_prev: ActionState, formData: FormData): Prom
   redirect(stepHref("branch"));
 }
 
-export async function saveBranch(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveBranch(previousState: ActionState, formData: FormData): Promise<ActionState> {
   const { user, business } = await requireOwner();
-  const values = { name: text(formData, "name"), url: text(formData, "url") };
-  const parsed = z.object({ name: branchName, url: mapsUrl }).safeParse(values);
+  const values = { name: text(formData, "name"), url: text(formData, "url"), reviewUrl: text(formData, "reviewUrl") };
+  const parsed = z.object({ name: branchName, url: optionalMapsUrl, reviewUrl }).safeParse(values);
   if (!parsed.success) return { fieldErrors: fieldErrors(parsed.error), values };
 
   // Going back to this step edits the first branch instead of adding another.
   const [first] = await listBranches();
-  const input = { name: parsed.data.name, googleMapsUrl: parsed.data.url };
+  const input = { name: parsed.data.name, googleMapsUrl: parsed.data.url || null, googleReviewUrl: parsed.data.reviewUrl };
   const result = first ? await updateBranch(first.id, input) : await createBranch(input);
   if (!result.ok) return { error: result.error, values };
 
@@ -63,14 +64,14 @@ export async function saveBranch(_prev: ActionState, formData: FormData): Promis
   redirect(stepHref("google"));
 }
 
-/** Google is not connected in this phase, so this step only moves on. */
+// Google is not connected in this phase, so this step only moves on.
 export async function skipGoogle(): Promise<void> {
   const { user, business } = await requireOwner();
   if (!(await save(user.id, business.onboardingStep, "replies"))) redirect(stepHref("google"));
   redirect(stepHref("replies"));
 }
 
-export async function saveReplies(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveReplies(previousState: ActionState, formData: FormData): Promise<ActionState> {
   const { user, business } = await requireOwner();
   const parsed = z
     .object({ tone: z.enum(toneValues), rule: z.enum(approvalRules), auto: z.enum(["true", "false"]) })

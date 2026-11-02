@@ -407,7 +407,6 @@ export const account = { initials: "OW", name: "Owner", plan: "Pro plan" };
 
 export const tones: Tone[] = ["Warm", "Friendly", "Professional", "Formal"];
 
-export const qrAttributes = ["Food quality", "Friendly staff", "Ambience", "Quick service", "Cleanliness", "Good value", "Long wait"];
 
 // Insights (provisional screen)
 export const weeklyReviews = [

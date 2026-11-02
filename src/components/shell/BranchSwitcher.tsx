@@ -9,7 +9,7 @@ function useOptions(): MenuOption[] {
   const branches = useShellBranches();
   return [
     { value: "", label: "All branches", hint: `${branches.length} ${branches.length === 1 ? "branch" : "branches"}` },
-    ...branches.map((b) => ({ value: b.id, label: b.name, hint: b.hasMapsLink ? "Maps link added" : "No Maps link" })),
+    ...branches.map((b) => ({ value: b.id, label: b.name, hint: b.hasReviewLink ? "Review link added" : "No review link" })),
   ];
 }
 

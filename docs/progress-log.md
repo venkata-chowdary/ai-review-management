@@ -2,6 +2,10 @@
 
 Newest entries first. Add a new entry at the top for each milestone.
 
+## 4 Nov 2026: customer QR review journey (Phase 4)
+
+QR page, Gemini suggestions, rate limiting and real QR codes are built. See `phase-4-qr-review.md`. Owners now paste Google's own review link per branch; customers rate, pick suggestions, edit and post on Google themselves. `tsc`, lint, `next build` and the unit tests pass. The new migration and database tests, and the Gemini call, still need to be run against a real project.
+
 ## 3 Nov 2026: sign-in and onboarding wired (code complete, database not yet applied)
 
 Sign-up, sign-in, password reset, sign-out, Google sign-in code, route protection, onboarding saved to the database, and branch add/edit are built. See `phase-3-auth.md`. `tsc`, lint and `next build` pass. Not yet run against a database: the two pending migrations must be applied, the database tests run, and the flow tested by hand.
@@ -16,7 +20,8 @@ Phase 2 (database and security foundation) is complete on a development Supabase
 | Phase 1 | App shell, all screens, loading/empty/error states, sample data | Done |
 | Phase 2 | Supabase schema, row level security, server clients, setup docs | Done |
 | Phase 3 | Sign-in, onboarding, branches, route protection | Code done; migrations to apply and test |
-| Next |  real data in place of sample data (one table per feature), QR suggestions via Gemini | Not started |
+| Phase 4 | QR landing page, Gemini suggestions, rate limiting, real QR codes | Code done; migration to apply and test |
+| Next | Real data in place of sample data (one table per feature) | Not started |
 
 ## Open items and blockers
 

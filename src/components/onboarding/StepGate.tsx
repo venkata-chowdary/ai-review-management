@@ -11,7 +11,15 @@ async function Gate({ step, children }: { step: StepSlug; children: ReactNode })
   const draft: OnboardingDraft = {
     businessName: business.name || undefined,
     businessType: business.businessType ?? undefined,
-    branch: branch ? { name: branch.name, googleMapsUrl: branch.googleMapsUrl ?? "" } : undefined,
+    branch: branch
+      ? {
+          id: branch.id,
+          name: branch.name,
+          googleMapsUrl: branch.googleMapsUrl ?? "",
+          googleReviewUrl: branch.googleReviewUrl ?? "",
+          qrCode: branch.qrCode,
+        }
+      : undefined,
     googleConnected: false,
     tone: (business.aiTone as OnboardingDraft["tone"]) ?? undefined,
     approvalRule: (business.aiApprovalRule as OnboardingDraft["approvalRule"]) ?? undefined,
@@ -20,11 +28,7 @@ async function Gate({ step, children }: { step: StepSlug; children: ReactNode })
   return <OnboardingDraftProvider draft={draft}>{children}</OnboardingDraftProvider>;
 }
 
-/**
- * Wraps a step page: requires a signed-in owner, sends them back to their
- * current step if they opened one that is further ahead, and provides the saved
- * answers. Reads cookies, so it sits behind its own Suspense boundary.
- */
+// Reads cookies, so it sits behind its own Suspense boundary.
 export function StepGate({ step, children }: { step: StepSlug; children: ReactNode }) {
   return (
     <Suspense fallback={null}>

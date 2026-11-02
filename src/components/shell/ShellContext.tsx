@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
-export type ShellBranch = { id: string; name: string; hasMapsLink: boolean };
+export type ShellBranch = { id: string; name: string; hasReviewLink: boolean };
 
 type Shell = { branches: ShellBranch[] };
 

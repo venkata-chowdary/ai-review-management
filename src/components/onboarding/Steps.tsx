@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState, useId, useState, type ReactNode } from "react";
 import { CopyButton } from "@/components/qr/QrBits";
 import { QrPreview } from "@/components/qr/QrPreview";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button, buttonClass, ButtonLink } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Avatar, Card, Rating } from "@/components/ui/Display";
 import { TextInput } from "@/components/ui/Field";
@@ -18,10 +18,6 @@ import { businessTypes } from "@/lib/validation";
 import { StepFooter, StepFrame } from "./StepFrame";
 import { useOnboardingDraft } from "./useOnboardingDraft";
 
-// The five onboarding steps, kept short for non-technical owners.
-// Each step saves to the database through a server action, which also moves on to the next step.
-
-/** Label, input and an error or hint below it. */
 function Labeled({
   id,
   label,
@@ -52,8 +48,6 @@ function Labeled({
     </div>
   );
 }
-
-/* ---------- 1. Business ---------- */
 
 export function BusinessStep() {
   const draft = useOnboardingDraft();
@@ -95,9 +89,9 @@ export function BusinessStep() {
             <p className="-mt-1 mb-1 text-[12.5px] text-fg-muted">Pick the closest one. It helps AI write better replies.</p>
             <input type="hidden" name="type" value={type} />
             <div className="flex flex-wrap gap-2">
-              {businessTypes.map((t) => (
-                <Chip key={t} pressed={type === t} onClick={() => setType(t)}>
-                  {t}
+              {businessTypes.map((businessTypeOption) => (
+                <Chip key={businessTypeOption} pressed={type === businessTypeOption} onClick={() => setType(businessTypeOption)}>
+                  {businessTypeOption}
                 </Chip>
               ))}
             </div>
@@ -115,8 +109,6 @@ export function BusinessStep() {
   );
 }
 
-/* ---------- 2. Branch ---------- */
-
 export function BranchStep() {
   const draft = useOnboardingDraft();
   const [state, formAction, pending] = useActionState(saveBranch, {});
@@ -127,7 +119,7 @@ export function BranchStep() {
   return (
     <StepFrame
       title="Add your first branch"
-      description="We need the Google Maps link of your branch, so that customers who scan your QR code reach the right Google review page. You can add more branches later."
+      description="We need the Google review link of your branch, so that customers who scan your QR code reach the right Google review page. You can add more branches later."
     >
       <form action={formAction} noValidate className="flex flex-1 flex-col gap-5">
         <Card className="flex flex-col gap-5 p-5">
@@ -155,21 +147,55 @@ export function BranchStep() {
           </Labeled>
 
           <Labeled
-            id={`${id}-url`}
-            label="Google Maps link"
-            error={errors.url}
+            id={`${id}-reviewUrl`}
+            label="Google review link"
+            error={errors.reviewUrl}
             hint={
               <button
                 type="button"
                 aria-expanded={help}
                 aria-controls={`${id}-help`}
-                onClick={() => setHelp((h) => !h)}
+                onClick={() => setHelp((wasOpen) => !wasOpen)}
                 className="flex w-fit items-center gap-1 text-[12.5px] font-semibold text-primary-text hover:underline"
               >
                 How to get this link?
                 <Icon name="chevron-down" size={14} className={cn("transition-transform", help && "rotate-180")} />
               </button>
             }
+          >
+            <TextInput
+              id={`${id}-reviewUrl`}
+              name="reviewUrl"
+              type="url"
+              inputMode="url"
+              defaultValue={state.values?.reviewUrl ?? draft.branch?.googleReviewUrl}
+              placeholder="https://g.page/r/…/review"
+              aria-invalid={!!errors.reviewUrl}
+              aria-describedby={errors.reviewUrl ? `${id}-reviewUrl-error` : undefined}
+              className="h-field"
+            />
+          </Labeled>
+
+          {help && (
+            <ol id={`${id}-help`} className="-mt-2 flex flex-col gap-2 rounded-inner bg-app px-4 py-3.5 text-[13.5px]">
+              {[
+                "Open Google Business Profile for your shop, on your phone or computer.",
+                "Open Get more reviews.",
+                "Copy the review link, then come back and paste it here.",
+              ].map((instruction, index) => (
+                <li key={instruction} className="flex items-center gap-2.5">
+                  <span className="grid size-6 flex-none place-items-center rounded-pill bg-surface text-[12px] font-bold shadow-button-light">{index + 1}</span>
+                  {instruction}
+                </li>
+              ))}
+            </ol>
+          )}
+
+          <Labeled
+            id={`${id}-url`}
+            label="Google Maps link (optional)"
+            error={errors.url}
+            hint={<p className="text-[12px] text-fg-muted">Open your shop on Google Maps, tap Share, then Copy link.</p>}
           >
             <TextInput
               id={`${id}-url`}
@@ -183,29 +209,12 @@ export function BranchStep() {
               className="h-field"
             />
           </Labeled>
-
-          {help && (
-            <ol id={`${id}-help`} className="-mt-2 flex flex-col gap-2 rounded-inner bg-app px-4 py-3.5 text-[13.5px]">
-              {[
-                "Open Google Maps on your phone and search for your shop.",
-                "Open your shop’s page and tap Share.",
-                "Tap Copy link, then come back and paste it here.",
-              ].map((t, i) => (
-                <li key={t} className="flex items-center gap-2.5">
-                  <span className="grid size-6 flex-none place-items-center rounded-pill bg-surface text-[12px] font-bold shadow-button-light">{i + 1}</span>
-                  {t}
-                </li>
-              ))}
-            </ol>
-          )}
         </Card>
         <StepFooter backHref={stepHref("business")} pending={pending} />
       </form>
     </StepFrame>
   );
 }
-
-/* ---------- 3. Google ---------- */
 
 const googleBenefits: { icon: IconName; title: string; text: string }[] = [
   { icon: "reviews", title: "New reviews come in automatically", text: "No need to check Google again and again." },
@@ -222,14 +231,14 @@ export function GoogleStep() {
       <form action={skipGoogle} className="flex flex-1 flex-col gap-5">
         <Card className="flex flex-col gap-5 p-5">
           <ul className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-            {googleBenefits.map((b) => (
-              <li key={b.title} className="flex items-start gap-3 sm:flex-col sm:gap-1.5">
+            {googleBenefits.map((benefit) => (
+              <li key={benefit.title} className="flex items-start gap-3 sm:flex-col sm:gap-1.5">
                 <span className="grid size-8 flex-none place-items-center rounded-pill bg-selection text-primary-text">
-                  <Icon name={b.icon} size={16} />
+                  <Icon name={benefit.icon} size={16} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[13.5px] leading-5 font-semibold">{b.title}</span>
-                  <span className="block text-[12.5px] leading-[18px] text-fg-muted">{b.text}</span>
+                  <span className="block text-[13.5px] leading-5 font-semibold">{benefit.title}</span>
+                  <span className="block text-[12.5px] leading-[18px] text-fg-muted">{benefit.text}</span>
                 </span>
               </li>
             ))}
@@ -272,8 +281,6 @@ export function GoogleStep() {
   );
 }
 
-/* ---------- 4. AI replies ---------- */
-
 const exampleReplies: Record<Tone, string> = {
   Warm: "Thank you so much, Priya! So happy you liked the food and our quick service. Please visit again!",
   Friendly: "Thanks Priya! Glad you enjoyed it. See you again soon!",
@@ -281,17 +288,12 @@ const exampleReplies: Record<Tone, string> = {
   Formal: "Dear Priya, thank you for your kind words. We look forward to serving you again.",
 };
 
-/**
- * One plain question replaces the old star rule + auto-reply switch. Without
- * auto-posting every reply waits for the owner anyway, so these three choices
- * are the only ones that change anything.
- */
 type CheckMode = "all" | "happy" | "most";
 
-const checkModes: { value: CheckMode; title: string; text: string; needsGoogle?: boolean }[] = [
-  { value: "all", title: "I will check every reply", text: "Nothing goes on Google without your OK." },
-  { value: "happy", title: "Auto-post 4★ and 5★ replies", text: "You check replies to 1★ to 3★ reviews.", needsGoogle: true },
-  { value: "most", title: "Auto-post 3★ to 5★ replies", text: "You check replies to 1★ and 2★ reviews.", needsGoogle: true },
+const checkModes: { value: CheckMode; title: string; text: string; summary: string; needsGoogle?: boolean }[] = [
+  { value: "all", title: "I will check every reply", text: "Nothing goes on Google without your OK.", summary: "you check every reply" },
+  { value: "happy", title: "Auto-post 4★ and 5★ replies", text: "You check replies to 1★ to 3★ reviews.", summary: "4★ and 5★ replies post automatically", needsGoogle: true },
+  { value: "most", title: "Auto-post 3★ to 5★ replies", text: "You check replies to 1★ and 2★ reviews.", summary: "3★ to 5★ replies post automatically", needsGoogle: true },
 ];
 
 const modeSettings: Record<CheckMode, Pick<OnboardingDraft, "approvalRule" | "autoPublish">> = {
@@ -300,21 +302,14 @@ const modeSettings: Record<CheckMode, Pick<OnboardingDraft, "approvalRule" | "au
   most: { approvalRule: "2", autoPublish: true },
 };
 
-function modeFromDraft(d: OnboardingDraft): CheckMode {
-  if (!d.autoPublish || !d.googleConnected) return "all";
-  return d.approvalRule === "2" ? "most" : "happy";
-}
-
-/** Short summary for the setup checklist. */
-export function checkModeSummary(d: OnboardingDraft) {
-  const mode = modeFromDraft(d);
-  return mode === "all" ? "you check every reply" : mode === "happy" ? "4★ and 5★ replies post automatically" : "3★ to 5★ replies post automatically";
+function modeFromDraft(draft: OnboardingDraft): CheckMode {
+  if (!draft.autoPublish || !draft.googleConnected) return "all";
+  return draft.approvalRule === "2" ? "most" : "happy";
 }
 
 export function RepliesStep() {
   const draft = useOnboardingDraft();
   const [state, formAction, pending] = useActionState(saveReplies, {});
-  // Safe defaults are already chosen; most owners just press Continue.
   const [tone, setTone] = useState<Tone>(draft.tone ?? "Warm");
   const [mode, setMode] = useState<CheckMode>(modeFromDraft(draft));
   const connected = !!draft.googleConnected;
@@ -338,13 +333,12 @@ export function RepliesStep() {
           <div className="flex flex-col gap-3">
             <p className="text-label font-semibold">1. How should replies sound?</p>
             <div role="group" aria-label="Reply style" className="flex flex-wrap gap-2">
-              {tones.map((t) => (
-                <Chip key={t} pressed={t === tone} onClick={() => setTone(t)}>
-                  {t}
+              {tones.map((toneOption) => (
+                <Chip key={toneOption} pressed={toneOption === tone} onClick={() => setTone(toneOption)}>
+                  {toneOption}
                 </Chip>
               ))}
             </div>
-            {/* A Google review with your reply under it, as customers will see it. */}
             <div className="rounded-inner bg-app p-3.5">
               <div className="flex items-start gap-2.5">
                 <Avatar name="Priya S." size={28} />
@@ -369,17 +363,17 @@ export function RepliesStep() {
               2. Who checks replies before they go on Google?
             </p>
             <div role="radiogroup" aria-labelledby="check-mode-label" className="flex flex-col gap-2">
-              {checkModes.map((m) => {
-                const locked = m.needsGoogle && !connected;
-                const on = mode === m.value;
+              {checkModes.map((option) => {
+                const locked = option.needsGoogle && !connected;
+                const on = mode === option.value;
                 return (
                   <button
-                    key={m.value}
+                    key={option.value}
                     type="button"
                     role="radio"
                     aria-checked={on}
                     aria-disabled={locked || undefined}
-                    onClick={() => !locked && setMode(m.value)}
+                    onClick={() => !locked && setMode(option.value)}
                     className={cn(
                       "flex items-start gap-3 rounded-inner px-4 py-3 text-left transition-colors",
                       on ? "bg-selection shadow-[inset_0_0_0_1px_var(--selection-border)]" : "bg-surface shadow-button-light",
@@ -396,11 +390,11 @@ export function RepliesStep() {
                     </span>
                     <span className="min-w-0 flex-1 sm:flex sm:flex-wrap sm:items-baseline sm:gap-x-2">
                       <span className={cn("block text-[13.5px] leading-5 font-semibold", on && "text-primary-text")}>
-                        {m.title}
-                        {m.value === "all" && <span className="ml-1.5 text-[11.5px] font-semibold text-fg-muted">(Recommended)</span>}
+                        {option.title}
+                        {option.value === "all" && <span className="ml-1.5 text-[11.5px] font-semibold text-fg-muted">(Recommended)</span>}
                       </span>
                       <span className="block text-[12.5px] leading-[18px] text-fg-muted">
-                        {m.text}
+                        {option.text}
                       </span>
                     </span>
                   </button>
@@ -422,9 +416,6 @@ export function RepliesStep() {
   );
 }
 
-/* ---------- 5. QR code ---------- */
-
-/** One item of the setup summary: a divided row on phones, a tile from 640px. */
 function SetupItem({ ok, title, children, action }: { ok: boolean; title: string; children?: ReactNode; action?: ReactNode }) {
   return (
     <li className="flex items-start gap-2.5 border-t border-line py-1.5 first:border-t-0 first:pt-0 last:pb-0 sm:gap-3 sm:rounded-inner sm:border sm:bg-surface sm:p-3.5 sm:first:border-t sm:first:pt-3.5 sm:last:pb-3.5">
@@ -444,7 +435,7 @@ export function QrStep() {
   const draft = useOnboardingDraft();
   const business = draft.businessName || "Your business";
   const branch = draft.branch?.name || "Main";
-  const path = "/r/demo-downtown";
+  const path = `/r/${draft.branch?.qrCode}`;
 
   return (
     <StepFrame
@@ -455,12 +446,11 @@ export function QrStep() {
         <Card className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6">
           <div className="flex items-center gap-3.5 sm:contents">
             <div className="size-[108px] flex-none rounded-[16px] bg-app p-1.5 sm:size-[148px] sm:rounded-[20px] sm:p-2.5 [&_svg]:size-full">
-              <QrPreview seed={`${business}-${branch}`} size={160} />
+              <QrPreview value={`${process.env.NEXT_PUBLIC_SITE_URL}${path}`} size={160} />
             </div>
             <div className="min-w-0 sm:hidden">
               <p className="text-[14.5px] leading-5 font-bold">{business}</p>
               <p className="text-[13px] text-fg-muted">{branch} branch</p>
-              <p className="mt-1 text-[12px] leading-[17px] text-fg-muted">Sample QR. Download and printing are coming soon.</p>
             </div>
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-3">
@@ -472,15 +462,15 @@ export function QrStep() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button icon="download" disabled title="Coming soon">
+              <a href={`/qr-codes/${draft.branch?.id}/download?format=png`} download className={buttonClass({})}>
+                <Icon name="download" size={15} />
                 Download
-              </Button>
+              </a>
               <CopyButton text={path} />
               <ButtonLink href={path} target="_blank" trailingIcon="external" variant="text">
                 Preview
               </ButtonLink>
             </div>
-            <p className="hidden text-[12px] text-fg-muted sm:block">This is a sample QR code. Download and printing are coming soon.</p>
           </div>
         </Card>
 
@@ -495,7 +485,7 @@ export function QrStep() {
             </SetupItem>
             <SetupItem ok title="First branch">
               {branch}
-              {draft.branch?.googleMapsUrl ? " · Maps link added" : ""}
+              {draft.branch?.googleReviewUrl ? " · Review link added" : ""}
             </SetupItem>
             <SetupItem
               ok={!!draft.googleConnected}
@@ -511,7 +501,7 @@ export function QrStep() {
               {draft.googleConnected ? "New reviews will come in automatically." : "QR works now. Reviews start after you connect."}
             </SetupItem>
             <SetupItem ok title="AI replies">
-              {draft.tone ?? "Warm"} style · {checkModeSummary(draft)}
+              {draft.tone ?? "Warm"} style · {checkModes.find((option) => option.value === modeFromDraft(draft))?.summary}
             </SetupItem>
           </ul>
         </section>

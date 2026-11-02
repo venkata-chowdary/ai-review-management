@@ -6,14 +6,14 @@ import { z } from "zod";
 import { createBranch, updateBranch } from "@/lib/data/branches";
 import { requireOnboardedOwner } from "@/lib/data/business";
 import { createClient } from "@/lib/supabase/server";
-import { branchName, businessName, fieldErrors, mapsUrl, type ActionState } from "@/lib/validation";
+import { branchName, businessName, fieldErrors, optionalMapsUrl, reviewUrl, type ActionState } from "@/lib/validation";
 
 // Actions for the signed-in dashboard: business details and branches.
 // Each one finds the owner from the session, never from an id in the form.
 
-const text = (fd: FormData, key: string) => String(fd.get(key) ?? "");
+const text = (formData: FormData, key: string) => String(formData.get(key) ?? "");
 
-export async function saveBusinessName(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveBusinessName(previousState: ActionState, formData: FormData): Promise<ActionState> {
   const { user } = await requireOnboardedOwner();
   const values = { name: text(formData, "name") };
   const parsed = z.object({ name: businessName }).safeParse(values);
@@ -27,15 +27,14 @@ export async function saveBusinessName(_prev: ActionState, formData: FormData): 
   return { ok: true, values: { name: parsed.data.name } };
 }
 
-/** Adds a branch, or edits one when the form carries its id. */
-export async function saveBranchDetails(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveBranchDetails(previousState: ActionState, formData: FormData): Promise<ActionState> {
   await requireOnboardedOwner();
   const id = text(formData, "id");
-  const values = { name: text(formData, "name"), url: text(formData, "url") };
-  const parsed = z.object({ name: branchName, url: mapsUrl }).safeParse(values);
+  const values = { name: text(formData, "name"), url: text(formData, "url"), reviewUrl: text(formData, "reviewUrl") };
+  const parsed = z.object({ name: branchName, url: optionalMapsUrl, reviewUrl }).safeParse(values);
   if (!parsed.success) return { fieldErrors: fieldErrors(parsed.error), values };
 
-  const input = { name: parsed.data.name, googleMapsUrl: parsed.data.url };
+  const input = { name: parsed.data.name, googleMapsUrl: parsed.data.url || null, googleReviewUrl: parsed.data.reviewUrl };
   const result = id ? await updateBranch(id, input) : await createBranch(input);
   if (!result.ok) return { error: result.error, values };
 

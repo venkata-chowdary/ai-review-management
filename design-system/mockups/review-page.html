@@ -1,0 +1,227 @@
+<title>Customer Review Page</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Board of three single-page directions, each a full customer page in a phone-width frame. */
+:root{--bg:#ececf0;--fg:#1d1d1f;--muted:#6e6e73;--line:#d8d8de;--chip:#fff;--font:"Manrope",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0f12;--fg:#f5f5f7;--muted:#9a9aa1;--line:#2a2b30;--chip:#1a1b1f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e0f12;--fg:#f5f5f7;--muted:#9a9aa1;--line:#2a2b30;--chip:#1a1b1f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.board{max-width:1280px;margin:0 auto}
+.board>header{margin-bottom:24px}
+.board h1{font-size:26px;letter-spacing:-.02em;margin:0 0 6px}
+.board header p{margin:0;color:var(--muted);font-size:14px;max-width:70ch;line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.slot{flex:0 1 390px;min-width:0;width:100%;max-width:390px}
+.slot>h2{font-size:13px;font-weight:700;margin:0 0 4px}
+.slot>p{font-size:12.5px;color:var(--muted);margin:0 0 12px;line-height:1.5}
+
+/* page tokens, per direction */
+.pg{--p:#0071e3;--p-soft:#e6f1fd;--p-text:#005bb8;--ink:#1d1d1f;--ink2:#6e6e73;--surf:#fff;--ground:#f5f5f7;--ln:rgba(29,29,31,.08);--star:#ff9f0a;--off:#d2d2d7;--sh:0 1px 2px rgba(29,29,31,.08),0 8px 24px -12px rgba(29,29,31,.18);
+ position:relative;width:100%;border-radius:36px;overflow:hidden;background:var(--ground);color:var(--ink);box-shadow:0 0 0 1px var(--line),0 24px 60px -30px rgba(0,0,0,.35);padding-bottom:132px;font-size:14px}
+.pg.b{--ground:#eef1f6;--p-soft:#e4ecfb}
+.pg.c{--p:#4da3ff;--p-soft:rgba(77,163,255,.16);--p-text:#8cc4ff;--ink:#f5f5f7;--ink2:#a1a1a8;--surf:#1b1c21;--ground:#101114;--ln:rgba(255,255,255,.09);--off:#3a3b42;--sh:0 1px 0 rgba(255,255,255,.05) inset,0 12px 30px -16px rgba(0,0,0,.7)}
+.pg button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.pg button:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+.card{background:var(--surf);border-radius:22px;box-shadow:var(--sh);padding:18px}
+.label{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.opt{font-weight:500;color:var(--ink2);font-size:12.5px;margin-left:6px}
+.sub{color:var(--ink2);font-size:12.5px;line-height:1.5;margin:3px 0 0}
+
+/* top bar + business */
+.bar{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 0}
+.seg{display:inline-flex;background:var(--ln);border-radius:999px;padding:3px}
+.seg button{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--surf);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.logo{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;background:linear-gradient(145deg,#ff8a3d,#e5484d);box-shadow:0 6px 16px -6px rgba(229,72,77,.7),inset 0 1px 0 rgba(255,255,255,.4)}
+.biz{display:flex;align-items:center;gap:14px}
+.biz h3{margin:0;font-size:21px;letter-spacing:-.02em;line-height:1.15}
+.meta{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);margin-top:4px;flex-wrap:wrap}
+.meta b{color:var(--ink)}
+.gmark{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.08);font-size:10px;font-weight:800;color:#4285f4}
+
+/* stars */
+.stars{display:flex;justify-content:space-between;margin-top:14px}
+.stars button{width:20%;aspect-ratio:1;max-width:58px;display:grid;place-items:center;border-radius:16px;transition:transform .15s}
+.stars button:active{transform:scale(.9)}
+.stars svg{width:100%;height:100%;padding:6px;fill:none;stroke:var(--off);stroke-width:1.5;transition:fill .15s,stroke .15s}
+.stars button.on svg{fill:var(--star);stroke:var(--star);filter:drop-shadow(0 3px 6px rgba(255,159,10,.45))}
+.word{margin:6px 0 0;min-height:20px;font-size:13px;font-weight:700;color:var(--p-text)}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;background:var(--surf);box-shadow:0 0 0 1px var(--ln),0 1px 2px rgba(0,0,0,.05);transition:background .15s,box-shadow .15s,color .15s}
+.pg.b .chip,.pg.a .card .chip{background:var(--ground)}
+.pg.c .chip{background:#24252b}
+.chip[aria-pressed="true"]{background:var(--p-soft)!important;color:var(--p-text);box-shadow:0 0 0 1.5px var(--p)}
+.chip[aria-pressed="true"]::before{content:"✓ ";font-weight:800}
+
+/* review composer */
+.rev{position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,#6ab0ff,#8f7bff 55%,#ff9bd0);box-shadow:var(--sh)}
+.rev>div{background:var(--surf);border-radius:20px;padding:16px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--p-text);background:var(--p-soft);padding:5px 10px;border-radius:999px}
+.rev p.text{margin:12px 0 0;font-size:15.5px;line-height:1.55;letter-spacing:-.005em;min-height:96px}
+.tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tool{padding:8px 12px;border-radius:999px;font-size:12.5px;font-weight:700;box-shadow:0 0 0 1px var(--ln);color:var(--ink)}
+.locked .text{filter:blur(5px);opacity:.55;user-select:none}
+
+/* sticky CTA */
+.cta{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 16px;background:linear-gradient(to top,var(--ground) 62%,transparent)}
+.go{width:100%;height:54px;border-radius:999px;font-weight:800;font-size:15.5px;color:#fff;background:var(--p);display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:inset 0 -4px 20px -4px rgba(255,255,255,.22),0 6px 14px -4px rgba(0,113,227,.55),inset 0 2.5px 1px rgba(255,255,255,.55)!important}
+.pg.c .go{color:#06121f}
+.go[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none!important}
+.hint{margin:9px 0 0;text-align:center;font-size:12px;color:var(--ink2)}
+
+.links{display:flex;justify-content:center;gap:10px;margin-top:4px}
+.links span{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--surf);box-shadow:0 0 0 1px var(--ln);font-size:11px;font-weight:800;color:var(--ink2)}
+.foot{text-align:center;font-size:11.5px;color:var(--ink2);line-height:1.6}
+.foot b{display:inline-block;margin-top:6px;padding:6px 12px;border-radius:999px;background:var(--surf);box-shadow:0 0 0 1px var(--ln);color:var(--ink);font-size:11.5px}
+.stack{display:flex;flex-direction:column;gap:14px;padding:0 16px}
+.sparkle{width:13px;height:13px;fill:currentColor}
+
+/* A: soft blue hero */
+.a .hero{padding:0 16px 34px;background:radial-gradient(120% 90% at 20% 0%,#cfe3ff 0%,#eaf2ff 45%,var(--ground) 100%)}
+.a .hero .biz{margin-top:22px}
+/* B: deep brand hero with overlapping sheet */
+.b .hero{background:linear-gradient(160deg,#0b2a5b,#123f8a 60%,#1a56b8);color:#fff;padding:0 16px 56px;position:relative}
+.b .hero .seg{background:rgba(255,255,255,.16)}.b .hero .seg button{color:rgba(255,255,255,.75)}
+.b .hero .seg button[aria-pressed="true"]{background:#fff;color:#0b2a5b}
+.b .hero .meta{color:rgba(255,255,255,.78)}.b .hero .meta b{color:#fff}
+.b .hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+.b .hero .biz{margin-top:22px;position:relative;z-index:1}
+.b .sheet{margin-top:-34px;position:relative;z-index:2}
+.b .hero .gmark{box-shadow:none}
+/* C: dark with glow */
+.c .hero{padding:0 16px 22px;background:radial-gradient(90% 70% at 85% 0%,rgba(77,163,255,.28),transparent 60%)}
+.c .hero .biz{margin-top:22px}
+.c .stars button.on svg{filter:drop-shadow(0 0 10px rgba(255,159,10,.7))}
+.c .rev>div{background:#17181c}
+.c .cta{background:linear-gradient(to top,#101114 62%,transparent)}
+.c .seg{background:rgba(255,255,255,.1)}
+.c .seg button[aria-pressed="true"]{background:#2b2c33}
+</style>
+
+<div class="board">
+<header>
+  <h1>Customer review page, three directions</h1>
+  <p>One scrolling page for the QR scan: rate, tap what you liked, read the AI-written review, copy and open Google. No steps, no next button. The review card fills in as people tap, like the reference video. Tap the stars, chips and language to try them. Sample business only.</p>
+</header>
+<div class="row">
+
+<div class="slot"><h2>A · Soft light</h2><p>Closest to the app. Light hero, white sheet cards, glossy blue pill.</p>
+<div class="pg a" data-pg>
+  <div class="hero">
+    <div class="bar"><span class="seg" role="group" aria-label="Language"><button aria-pressed="true">English</button><button aria-pressed="false">हिन्दी</button><button aria-pressed="false">Hinglish</button></span><span class="gmark" title="Google">G</span></div>
+    <div class="biz"><div class="logo">SS</div><div><h3>Sharma Sweets</h3><div class="meta"><span class="gmark">G</span><b>4.8</b> ★ 1,284 reviews · MG Road</div></div></div>
+  </div>
+  <div class="stack" style="margin-top:-8px">
+    <div class="card"><div class="label">How was your visit?</div><p class="sub">Tap a star to get started.</p>
+      <div class="stars" role="radiogroup" aria-label="Rating"></div><p class="word" aria-live="polite"></p></div>
+    <div class="card"><div class="label">What did you order?<span class="opt">optional</span></div>
+      <div class="chips" data-group="order"><button class="chip" aria-pressed="true">Kaju katli</button><button class="chip" aria-pressed="false">Rasmalai</button><button class="chip" aria-pressed="false">Samosa</button><button class="chip" aria-pressed="false">Gift box</button><button class="chip" aria-pressed="false">Namkeen</button><button class="chip" aria-pressed="false">Ladoo</button></div>
+      <div class="label" style="margin-top:20px">What stood out?<span class="opt">optional</span></div>
+      <div class="chips" data-group="like"><button class="chip" aria-pressed="true">Taste</button><button class="chip" aria-pressed="true">Freshness</button><button class="chip" aria-pressed="false">Service</button><button class="chip" aria-pressed="false">Pricing</button><button class="chip" aria-pressed="false">Packaging</button><button class="chip" aria-pressed="false">Cleanliness</button></div></div>
+    <div class="rev"><div><span class="tag"><svg class="sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Written from your answers</span>
+      <p class="text" contenteditable="true" spellcheck="false"></p>
+      <div class="tools"><button class="tool" data-act="again">↻ Try another</button><button class="tool" data-act="short">Shorter</button><button class="tool" data-act="long">Longer</button></div></div></div>
+    <div class="links" aria-hidden="true"><span>IG</span><span>WEB</span><span>CALL</span><span>WA</span></div>
+    <div class="foot">12, MG Road, Indore<br><b>Powered by Reviewly</b></div>
+  </div>
+  <div class="cta"><button class="go" disabled>Copy review &amp; open Google</button><p class="hint">We copy it for you. Paste it on Google and tap Post.</p></div>
+</div></div>
+
+<div class="slot"><h2>B · Brand hero</h2><p>Deep blue hero carries the business. One white sheet slides over it.</p>
+<div class="pg b" data-pg>
+  <div class="hero">
+    <div class="bar"><span class="seg" role="group" aria-label="Language"><button aria-pressed="true">English</button><button aria-pressed="false">हिन्दी</button><button aria-pressed="false">Hinglish</button></span></div>
+    <div class="biz"><div class="logo">SS</div><div><h3>Sharma Sweets</h3><div class="meta"><span class="gmark">G</span><b>4.8</b> ★ 1,284 reviews · MG Road</div></div></div>
+  </div>
+  <div class="stack sheet">
+    <div class="card"><div class="label">How was your visit?</div>
+      <div class="stars" role="radiogroup" aria-label="Rating"></div><p class="word" aria-live="polite"></p>
+      <div class="label" style="margin-top:18px">What did you order?<span class="opt">optional</span></div>
+      <div class="chips" data-group="order"><button class="chip" aria-pressed="true">Kaju katli</button><button class="chip" aria-pressed="false">Rasmalai</button><button class="chip" aria-pressed="false">Samosa</button><button class="chip" aria-pressed="false">Gift box</button><button class="chip" aria-pressed="false">Namkeen</button></div>
+      <div class="label" style="margin-top:18px">What stood out?<span class="opt">optional</span></div>
+      <div class="chips" data-group="like"><button class="chip" aria-pressed="true">Taste</button><button class="chip" aria-pressed="true">Freshness</button><button class="chip" aria-pressed="false">Service</button><button class="chip" aria-pressed="false">Pricing</button><button class="chip" aria-pressed="false">Packaging</button></div></div>
+    <div class="rev"><div><span class="tag"><svg class="sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Your review, ready to post</span>
+      <p class="text" contenteditable="true" spellcheck="false"></p>
+      <div class="tools"><button class="tool" data-act="again">↻ Try another</button><button class="tool" data-act="short">Shorter</button><button class="tool" data-act="long">Longer</button></div></div></div>
+    <div class="foot">12, MG Road, Indore<br><b>Powered by Reviewly</b></div>
+  </div>
+  <div class="cta"><button class="go" disabled>Copy review &amp; open Google</button><p class="hint">Paste it on Google and tap Post. Takes 10 seconds.</p></div>
+</div></div>
+
+<div class="slot"><h2>C · Night</h2><p>Dark glass with a blue glow. For shops that scan at night or want a bolder look.</p>
+<div class="pg c" data-pg>
+  <div class="hero">
+    <div class="bar"><span class="seg" role="group" aria-label="Language"><button aria-pressed="true">English</button><button aria-pressed="false">हिन्दी</button><button aria-pressed="false">Hinglish</button></span><span class="gmark">G</span></div>
+    <div class="biz"><div class="logo">SS</div><div><h3>Sharma Sweets</h3><div class="meta"><span class="gmark">G</span><b>4.8</b> ★ 1,284 reviews · MG Road</div></div></div>
+  </div>
+  <div class="stack">
+    <div class="card" style="text-align:center"><div class="label" style="font-size:17px">How was your visit?</div><p class="sub">Tap a star to get started.</p>
+      <div class="stars" role="radiogroup" aria-label="Rating"></div><p class="word" aria-live="polite"></p></div>
+    <div class="card"><div class="label">What did you order?<span class="opt">optional</span></div>
+      <div class="chips" data-group="order"><button class="chip" aria-pressed="true">Kaju katli</button><button class="chip" aria-pressed="false">Rasmalai</button><button class="chip" aria-pressed="false">Samosa</button><button class="chip" aria-pressed="false">Gift box</button><button class="chip" aria-pressed="false">Namkeen</button></div>
+      <div class="label" style="margin-top:18px">What stood out?<span class="opt">optional</span></div>
+      <div class="chips" data-group="like"><button class="chip" aria-pressed="true">Taste</button><button class="chip" aria-pressed="true">Freshness</button><button class="chip" aria-pressed="false">Service</button><button class="chip" aria-pressed="false">Pricing</button><button class="chip" aria-pressed="false">Packaging</button></div></div>
+    <div class="rev"><div><span class="tag"><svg class="sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Written from your answers</span>
+      <p class="text" contenteditable="true" spellcheck="false"></p>
+      <div class="tools"><button class="tool" data-act="again">↻ Try another</button><button class="tool" data-act="short">Shorter</button><button class="tool" data-act="long">Longer</button></div></div></div>
+    <div class="foot">12, MG Road, Indore<br><b>Powered by Reviewly</b></div>
+  </div>
+  <div class="cta"><button class="go" disabled>Copy review &amp; open Google</button><p class="hint">We copy it for you. Paste it on Google and tap Post.</p></div>
+</div></div>
+
+</div></div>
+
+<script>
+const words = ["", "Poor", "Disappointing", "Okay", "Good", "Excellent"];
+const drafts = {
+  English: [
+    ["Tried the kaju katli at Sharma Sweets and it was fresh and melt-in-the-mouth. Great taste and the staff packed it neatly. Will be back for Diwali.", "Fresh kaju katli with great taste. Staff were quick and polite. Recommended."],
+    ["Sharma Sweets never disappoints. The kaju katli was fresh, not too sweet, and the whole shop smells wonderful. Friendly service and fair prices too. Our family's favourite for every festival.", "Fresh, tasty and fairly priced. Our go-to for festival sweets."]
+  ],
+  "हिन्दी": [
+    ["शर्मा स्वीट्स की काजू कतली बहुत ताज़ा और स्वादिष्ट थी। पैकिंग भी बढ़िया थी। दिवाली पर दोबारा आएंगे।", "ताज़ी और स्वादिष्ट काजू कतली। स्टाफ का व्यवहार भी अच्छा है।"],
+    ["शर्मा स्वीट्स की मिठाइयाँ हमेशा ताज़ा और कम मीठी होती हैं। सेवा अच्छी है और दाम भी सही। हमारे परिवार की पहली पसंद।", "ताज़ी मिठाई, सही दाम। परिवार की पसंदीदा दुकान।"]
+  ],
+  Hinglish: [
+    ["Sharma Sweets ki kaju katli ekdum fresh aur tasty thi. Packing bhi badhiya, staff bhi helpful. Diwali pe phir aayenge.", "Fresh aur tasty kaju katli. Staff helpful hai. Recommended!"],
+    ["Sharma Sweets ki mithai hamesha fresh rehti hai, zyada meethi nahi. Service achhi aur rate bhi sahi. Hamare ghar ki first choice.", "Fresh mithai, sahi rate. Ghar ki favourite dukaan."]
+  ]
+};
+const star = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.2 1.2-6.6L2.5 9.5l6.6-.9z" stroke-linejoin="round"/></svg>';
+document.querySelectorAll("[data-pg]").forEach((pg) => {
+  let rating = 0, lang = "English", variant = 0, length = 0;
+  const text = pg.querySelector(".text"), go = pg.querySelector(".go"), word = pg.querySelector(".word"), rev = pg.querySelector(".rev");
+  const starBox = pg.querySelector(".stars");
+  for (let n = 1; n <= 5; n++) {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-label", `${n} star${n > 1 ? "s" : ""}`); b.innerHTML = star;
+    b.onclick = () => { rating = n; draw(); };
+    starBox.append(b);
+  }
+  function draw() {
+    starBox.querySelectorAll("button").forEach((b, i) => { b.classList.toggle("on", i < rating); b.setAttribute("aria-checked", i + 1 === rating); });
+    word.textContent = rating ? words[rating] : "";
+    rev.classList.toggle("locked", !rating);
+    go.disabled = !rating;
+    text.textContent = rating ? drafts[lang][variant % 2][length] : drafts[lang][0][0];
+    text.contentEditable = !!rating;
+  }
+  pg.querySelectorAll(".seg button").forEach((b) => b.onclick = () => {
+    pg.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    lang = b.textContent; draw();
+  });
+  pg.querySelectorAll(".chip").forEach((c) => c.onclick = () => { c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") !== "true"); variant++; draw(); });
+  pg.querySelectorAll(".tool").forEach((t) => t.onclick = () => {
+    if (t.dataset.act === "again") variant++;
+    if (t.dataset.act === "short") length = 1;
+    if (t.dataset.act === "long") length = 0;
+    draw();
+  });
+  go.onclick = () => { if (go.disabled) return; navigator.clipboard?.writeText(text.textContent).catch(() => {}); go.textContent = "Copied! Opening Google…"; setTimeout(() => go.textContent = "Copy review & open Google", 2200); };
+  rating = 5; draw();
+});
+</script>

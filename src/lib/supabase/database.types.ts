@@ -39,34 +39,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_events: {
+        Row: {
+          branch_id: string
+          created_at: string
+          id: string
+          input_tokens: number | null
+          model: string
+          output_tokens: number | null
+          user_id: string
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string
+          id?: string
+          input_tokens?: number | null
+          model: string
+          output_tokens?: number | null
+          user_id: string
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string
+          id?: string
+          input_tokens?: number | null
+          model?: string
+          output_tokens?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_events_branch_id_user_id_fkey"
+            columns: ["branch_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
       branches: {
         Row: {
+          ai_paused: boolean
           business_id: string
           created_at: string
           google_maps_url: string | null
+          google_review_url: string | null
           id: string
           name: string
           place_id: string | null
+          qr_code: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          ai_paused?: boolean
           business_id: string
           created_at?: string
           google_maps_url?: string | null
+          google_review_url?: string | null
           id?: string
           name: string
           place_id?: string | null
+          qr_code?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          ai_paused?: boolean
           business_id?: string
           created_at?: string
           google_maps_url?: string | null
+          google_review_url?: string | null
           id?: string
           name?: string
           place_id?: string | null
+          qr_code?: string
           updated_at?: string
           user_id?: string
         }
@@ -119,12 +166,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          hits: number
+          key: string
+          window_start: string
+        }
+        Insert: {
+          hits?: number
+          key: string
+          window_start: string
+        }
+        Update: {
+          hits?: number
+          key?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      rate_limit_hit: {
+        Args: { p_key: string; p_limit: number; p_window_seconds: number }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

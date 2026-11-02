@@ -4,22 +4,21 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { email as emailSchema, fieldErrors, newPassword, type ActionState } from "@/lib/validation";
+import { email, fieldErrors, newPassword, type ActionState } from "@/lib/validation";
 
-// Server actions for every auth form. Messages are deliberately generic so they
-// never reveal whether an email already has an account.
+// Messages are deliberately generic so they never reveal whether an email already has an account.
 
 async function siteUrl() {
-  const h = await headers();
-  const origin = h.get("origin");
+  const requestHeaders = await headers();
+  const origin = requestHeaders.get("origin");
   if (origin) return origin;
   return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 }
 
-const text = (fd: FormData, key: string) => String(fd.get(key) ?? "");
+const text = (formData: FormData, key: string) => String(formData.get(key) ?? "");
 
-export async function signIn(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = z.object({ email: emailSchema, password: z.string().min(1, "Please enter your password.") }).safeParse({
+export async function signIn(previousState: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = z.object({ email, password: z.string().min(1, "Please enter your password.") }).safeParse({
     email: text(formData, "email"),
     password: text(formData, "password"),
   });
@@ -37,8 +36,8 @@ export async function signIn(_prev: ActionState, formData: FormData): Promise<Ac
   redirect("/");
 }
 
-export async function signUp(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = z.object({ email: emailSchema, password: newPassword }).safeParse({
+export async function signUp(previousState: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = z.object({ email, password: newPassword }).safeParse({
     email: text(formData, "email"),
     password: text(formData, "password"),
   });
@@ -69,8 +68,8 @@ export async function signInWithGoogle(next: string = "/"): Promise<ActionState>
   redirect(data.url);
 }
 
-export async function forgotPassword(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  const parsed = emailSchema.safeParse(text(formData, "email"));
+export async function forgotPassword(previousState: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = email.safeParse(text(formData, "email"));
   if (!parsed.success) return { fieldErrors: { email: parsed.error.issues[0].message }, values: { email: text(formData, "email") } };
 
   const supabase = await createClient();
@@ -81,7 +80,7 @@ export async function forgotPassword(_prev: ActionState, formData: FormData): Pr
   return { ok: true, values: { email: parsed.data } };
 }
 
-export async function resetPassword(_prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function resetPassword(previousState: ActionState, formData: FormData): Promise<ActionState> {
   const password = text(formData, "password");
   const checked = newPassword.safeParse(password);
   const errors: Record<string, string> = {};
@@ -99,7 +98,7 @@ export async function resetPassword(_prev: ActionState, formData: FormData): Pro
 }
 
 export async function resendConfirmation(address: string): Promise<ActionState> {
-  const parsed = emailSchema.safeParse(address);
+  const parsed = email.safeParse(address);
   if (!parsed.success) return { error: "This email doesn’t look right." };
   const supabase = await createClient();
   const { error } = await supabase.auth.resend({

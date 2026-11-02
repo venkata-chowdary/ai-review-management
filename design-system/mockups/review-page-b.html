@@ -1,0 +1,213 @@
+<title>Customer Review Page</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Direction B on the app's design system: Apple Cool neutrals, one blue, glass, glossy pill, Manrope. */
+:root{--bg-app:#f5f5f7;--bg-surface:#fff;--bg-subtle:#ebebef;--text-primary:#1d1d1f;--text-secondary:#636368;--border-subtle:#e3e3e8;--border-control:#86868b;
+--action-primary:#0071e3;--action-primary-text:#0063c7;--selection-bg:#e6f1fc;--selection-border:#b3d4f6;--star:#b7790f;--action-primary-hover:#0063c8;--bg-row-hover:#f7f7f7;--glass-fill:rgba(255,255,255,.72);--blur-glass:18px;--focus-ring:#0071e3;
+--shadow-button-primary:inset 0 -4px 20px -4px rgba(255,255,255,.2),0 3px 6px -1px rgba(23,26,29,.1),inset 0 1.5px 1px 0 #0071e3,inset 0 2.5px 1px 0 rgba(255,255,255,.6);
+--shadow-button-light:inset 0 1px 1px 0 rgba(255,255,255,.2),0 1px 2px -.5px rgba(23,26,29,.1),0 0 0 .8px rgba(23,26,29,.06);
+--shadow-glass:0 2px 12px -4px rgba(23,26,29,.1),inset 0 1.25px 0 -.5px rgba(255,255,255,.3);
+--radius-card:16px;--radius-inner:14px;--font-manrope:"Manrope",system-ui,sans-serif;
+--board:#e4e4e9;--board-fg:#1d1d1f;--board-muted:#636368}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--board:#0e0f12;--board-fg:#f5f5f7;--board-muted:#9a9aa1;color-scheme:dark}}
+:root[data-theme="dark"]{--board:#0e0f12;--board-fg:#f5f5f7;--board-muted:#9a9aa1;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--board);color:var(--board-fg);font-family:var(--font-manrope);padding-block:32px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.board{max-width:960px;margin:0 auto}
+.board h1{font-size:24px;letter-spacing:-.02em;margin:0 0 8px}
+.board>p{margin:0 0 24px;color:var(--board-muted);font-size:14px;line-height:1.55;max-width:68ch}
+.row{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;align-items:flex-start}
+.slot{flex:0 1 390px;width:100%;max-width:390px;min-width:0}
+.slot h2{font-size:13px;margin:0 0 8px}
+
+.pg{background-image:radial-gradient(120% 60% at 20% 0%,var(--selection-bg),transparent 70%);background-repeat:no-repeat;position:relative;overflow:hidden;border-radius:36px;background:var(--bg-app);color:var(--text-primary);font-size:14px;padding-bottom:26px;box-shadow:0 0 0 1px rgba(0,0,0,.1),0 24px 60px -30px rgba(0,0,0,.4);color-scheme:light}
+:where(.pg button){font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.pg button:focus-visible,.pg a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.pg button:active:not([disabled]){transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.pg *{transition:none!important}.pg button:active{transform:none!important}}
+
+.card.first{position:relative;padding-top:40px}
+.card.first .who{text-align:center}
+.card.first .logo{position:absolute;left:50%;top:-32px;width:56px;height:56px;transform:translateX(-50%);border:4px solid var(--bg-app);box-sizing:content-box;margin-left:-4px}
+.card.first .who h3{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+.card.first .meta{margin-top:4px;font-size:13px}
+.card.first .meta b{color:var(--text-primary)}
+.card.first .star{font-style:normal;color:var(--star)}
+.card.first .div{margin:16px 0}
+.card.first .rowhead{text-align:left}
+.card.first .sub{text-align:left}
+.who{flex:1;min-width:0}
+.logo{flex:none;width:52px;height:52px;border-radius:999px;display:grid;place-items:center;font-weight:700;font-size:18px;color:var(--action-primary-text);background:#fff;box-shadow:var(--shadow-button-light)}
+.meta{margin-top:4px;color:var(--text-secondary);font-size:12.5px}
+.g{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.08);font-size:11px;font-weight:700;color:#4285f4}
+
+.stack{display:flex;flex-direction:column;gap:12px;padding:0 16px;margin-top:0;padding-top:48px;position:relative;z-index:2}
+.card{background:var(--bg-surface);border-radius:var(--radius-card);padding:20px;border:1px solid var(--border-subtle)}
+.label{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.opt{font-weight:500;color:var(--text-secondary);font-size:12.5px;margin-left:8px}
+.sub{margin:4px 0 0;color:var(--text-secondary);font-size:12.5px}
+.div{height:1px;background:var(--border-subtle);margin:20px 0}
+
+.stars{display:flex;justify-content:space-between;margin-top:8px}
+.stars button{width:48px;height:48px;border-radius:14px;transition:transform .15s}
+.stars button:active{transform:scale(.9)}
+.stars svg{width:100%;height:100%;padding:4px;fill:none;stroke:var(--border-control);stroke-width:1.4;opacity:.55;transition:all .15s}
+.stars button.on svg{fill:var(--star);stroke:var(--star);opacity:1}
+.rowhead{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:24px}
+.sub{text-align:center}
+.stars+.sub{margin-top:4px;text-align:center}
+.word{margin:0;font-size:13px;font-weight:700;color:var(--action-primary-text);white-space:nowrap}
+.word:empty{display:none}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;background:var(--bg-surface);box-shadow:var(--shadow-button-light);transition:background .15s,color .15s}
+.chip[aria-pressed="true"]{background:var(--selection-bg);color:var(--action-primary-text);box-shadow:inset 0 0 0 1px var(--selection-border)}
+.chip[aria-pressed="true"]::before{content:"✓ ";font-weight:700}
+
+/* review suggestions: one at a time, swipe sideways */
+.revhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.regen{height:32px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:-.01em;color:var(--text-secondary)}
+.regen:hover{background:var(--bg-subtle);color:var(--text-primary)}
+.locked .regen{opacity:.45;pointer-events:none}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border-radius:999px;background:var(--selection-bg);color:var(--action-primary-text);font-size:12px;font-weight:700}
+.tag svg{width:13px;height:13px;fill:currentColor}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:12px -4px 0;padding:0 4px}
+.track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;padding:0 4px;min-width:0}
+.text{margin:0;font-size:15.5px;line-height:1.55;min-height:132px;border-radius:var(--radius-inner);background:var(--bg-app);padding:12px 16px;outline:none}
+.text:focus{box-shadow:0 0 0 2px var(--action-primary)}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.dots button{position:relative;width:6px;height:6px;border-radius:999px;background:var(--border-control);opacity:.4;padding:0;transition:all .2s}
+.dots button[aria-current="true"]{width:20px;background:var(--action-primary);opacity:1}
+.locked .text{color:transparent;text-shadow:0 0 8px rgba(29,29,31,.55);user-select:none}
+.locked .dots{opacity:.4;pointer-events:none}
+.lockmsg{display:none;margin:12px 0 0;text-align:center;font-size:12.5px;color:var(--text-secondary)}
+.locked .lockmsg{display:block}
+
+.dots button::after{content:"";position:absolute;inset:-19px -7px}
+
+/* bottom block: button, contact icons, address, powered-by */
+.pg .go{width:100%;height:48px;border-radius:999px;background:var(--action-primary);color:#fff;font-weight:600;font-size:15px;letter-spacing:-.01em;transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:var(--shadow-button-primary)}
+.go svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pg .go:hover:not([disabled]){background:var(--action-primary-hover);color:#fff}
+.go[disabled]{opacity:.45;cursor:not-allowed}
+.links{display:flex;justify-content:center;gap:16px;margin-top:4px}
+.links a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:var(--shadow-button-light);color:var(--text-primary)}
+.links svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.powered{align-self:center;padding:8px 16px;border-radius:999px;background:#fff;box-shadow:var(--shadow-button-light);font-size:12px;font-weight:700}
+
+/* hover only where a pointer exists, so touch screens never get stuck states */
+.links a,.stars svg,.regen,.dots button{transition:background .15s,transform .15s,box-shadow .15s,opacity .15s,color .15s}
+@media (hover:hover){
+  .chip:not([aria-pressed="true"]):hover{background:var(--bg-row-hover)}
+  .chip[aria-pressed="true"]:hover{box-shadow:inset 0 0 0 1px var(--action-primary)}
+  .stars button:hover svg{transform:scale(1.12)}
+  .dots button:not([aria-current="true"]):hover{opacity:.8}
+  .links a:hover{background:var(--bg-row-hover);transform:translateY(-1px);box-shadow:0 3px 8px -2px rgba(23,26,29,.16),0 0 0 .8px rgba(23,26,29,.06)}
+}
+</style>
+
+<div class="board">
+  <h1>Customer review page</h1>
+  <p>Direction B on the app's design system. Left is what a customer sees on scan. Right is after they tap. Swipe the review box sideways to see the other suggestions. Both phones are interactive.</p>
+  <div class="row">
+    <div class="slot"><h2>On scan</h2><div class="pg" data-pg data-start="0"></div></div>
+    <div class="slot"><h2>After tapping</h2><div class="pg" data-pg data-start="5"></div></div>
+  </div>
+</div>
+
+<template id="tpl">
+  <div class="stack">
+    <div class="card first">
+      <div class="logo">SS</div>
+      <div class="who"><h3>Sharma Sweets</h3><div class="meta">MG Road branch · <i class="star">★</i> <b>4.8</b> · 1,284 reviews</div></div>
+      <div class="div"></div>
+      <div class="rowhead"><div class="label">How was your visit?</div><p class="word" aria-live="polite"></p></div>
+      <div class="stars" role="radiogroup" aria-label="Rating"></div><p class="sub">Tap a star to get started.</p>
+      <div class="div"></div>
+      <div class="label">What did you order?<span class="opt">optional</span></div>
+      <div class="chips"><button class="chip" aria-pressed="true">Kaju katli</button><button class="chip" aria-pressed="false">Rasmalai</button><button class="chip" aria-pressed="false">Samosa</button><button class="chip" aria-pressed="false">Gift box</button><button class="chip" aria-pressed="false">Namkeen</button></div>
+      <div class="label" style="margin-top:18px">What stood out?<span class="opt">optional</span></div>
+      <div class="chips"><button class="chip" aria-pressed="true">Taste</button><button class="chip" aria-pressed="true">Freshness</button><button class="chip" aria-pressed="false">Service</button><button class="chip" aria-pressed="false">Pricing</button><button class="chip" aria-pressed="false">Packaging</button></div>
+    </div>
+
+    <div class="card rev">
+      <div class="revhead"><span class="tag"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Pick a review</span><button class="regen" data-act="again">↻ Regenerate</button></div>
+      <div class="track" role="group" aria-roledescription="carousel" aria-label="Review suggestions"></div>
+      <div class="dots"></div>
+      <p class="lockmsg">Pick a star rating to see your reviews.</p>
+    </div>
+
+    <button class="go" disabled><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>Copy review &amp; open Google</button>
+    <div class="links">
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6"/></svg></a>
+      <a href="#" aria-label="Website"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></a>
+      <a href="#" aria-label="Call"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></a>
+      <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8.5 8.5 0 1 1 8.3 18.8z"/><path d="M9 9c0 3.3 2.7 6 6 6l1-1.5-2-1-1 .7a4 4 0 0 1-1.9-1.9l.7-1-1-2z"/></svg></a>
+    </div>
+    <span class="powered">Powered by Reviewly</span>
+  </div>
+</template>
+
+<script>
+const words = ["", "Poor", "Disappointing", "Okay", "Good", "Excellent"];
+const batches = [
+  [["Tried the kaju katli at Sharma Sweets and it was fresh and melt-in-the-mouth. Great taste and the staff packed it neatly. Will be back for Diwali.", "Fresh kaju katli with great taste. Staff packed it neatly."],
+   ["Sharma Sweets never disappoints. The kaju katli was fresh and not too sweet, and the whole shop smells wonderful. Friendly service and fair prices too.", "Fresh, tasty and fairly priced. Friendly service."],
+   ["Ordered a gift box for Diwali and everyone loved it. The sweets were fresh, the packing was neat and the staff helped us choose. Our family's go-to shop.", "Lovely gift box, fresh sweets and helpful staff."]],
+  [["Best sweets in MG Road. The freshness is the first thing you notice and the taste is just right. Quick, polite service even on a busy day.", "Best sweets on MG Road. Fresh, tasty and quick service."],
+   ["I have been coming to Sharma Sweets for years and the quality has never dropped. The kaju katli is my favourite. Prices are fair and staff are warm.", "Years of consistent quality. Kaju katli is a must."],
+   ["Picked up sweets for a family function. Everything was fresh and well packed, and they had it ready on time. Highly recommended.", "Fresh, well packed and ready on time. Recommended."]]
+];
+const star = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.2 1.2-6.6L2.5 9.5l6.6-.9z" stroke-linejoin="round"/></svg>';
+document.querySelectorAll("[data-pg]").forEach((pg) => {
+  pg.append(document.getElementById("tpl").content.cloneNode(true));
+  let rating = Number(pg.dataset.start), batch = 0, index = 0, hovered = 0;
+  const go = pg.querySelector(".go"), word = pg.querySelector(".word"), rev = pg.querySelector(".rev"), starBox = pg.querySelector(".stars");
+  const track = pg.querySelector(".track"), dots = pg.querySelector(".dots");
+  for (let n = 1; n <= 5; n++) {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-label", `${n} star${n > 1 ? "s" : ""}`); b.innerHTML = star;
+    b.onclick = () => { rating = n; draw(); };
+    b.onmouseenter = () => { hovered = n; draw(); };
+    b.onmouseleave = () => { hovered = 0; draw(); };
+    starBox.append(b);
+  }
+  function fill() {
+    track.innerHTML = ""; dots.innerHTML = "";
+    batches[batch].forEach((pair, i) => {
+      const slide = document.createElement("div");
+      slide.className = "slide"; slide.setAttribute("role", "group"); slide.setAttribute("aria-label", `${i + 1} of 3`);
+      slide.innerHTML = '<p class="text" spellcheck="false"></p>';
+      slide.firstChild.textContent = pair[0];
+      track.append(slide);
+      const dot = document.createElement("button");
+      dot.type = "button"; dot.setAttribute("aria-label", `Suggestion ${i + 1}`);
+      dot.onclick = () => track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" });
+      dots.append(dot);
+    });
+    track.scrollLeft = 0; index = 0; mark();
+  }
+  function mark() {
+    dots.querySelectorAll("button").forEach((d, i) => d.setAttribute("aria-current", i === index));
+  }
+  function draw() {
+    starBox.querySelectorAll("button").forEach((b, i) => { b.classList.toggle("on", i < (hovered || rating)); b.setAttribute("aria-checked", i + 1 === rating); });
+    word.textContent = rating ? `${rating} · ${words[rating]}` : "";
+    rev.classList.toggle("locked", !rating);
+    go.disabled = !rating;
+    track.querySelectorAll(".text").forEach((t) => t.contentEditable = !!rating);
+  }
+  track.onscroll = () => { const i = Math.round(track.scrollLeft / track.clientWidth); if (i !== index) { index = i; mark(); } };
+  pg.querySelectorAll(".chip").forEach((c) => c.onclick = () => { c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") !== "true"); batch = (batch + 1) % 2; fill(); draw(); });
+  pg.querySelector('[data-act="again"]').onclick = () => { batch = (batch + 1) % 2; fill(); draw(); };
+  go.onclick = () => {
+    if (go.disabled) return;
+    navigator.clipboard?.writeText(track.querySelectorAll(".text")[index].textContent).catch(() => {});
+    const original = go.innerHTML; go.textContent = "Copied! Opening Google…";
+    setTimeout(() => go.innerHTML = original, 2200);
+  };
+  fill(); draw();
+});
+</script>

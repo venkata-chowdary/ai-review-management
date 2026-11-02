@@ -9,10 +9,6 @@ import { cn } from "@/lib/cn";
 import { forgotPassword, resendConfirmation, resetPassword, signIn, signInWithGoogle, signUp } from "@/lib/auth/actions";
 import { PASSWORD_HINT, type ActionState } from "@/lib/validation";
 
-// Sign-in, sign-up and password forms. Each submits to a server action, which
-// checks the input again and talks to Supabase Auth.
-
-/** Label, control, an optional hint and an error, wired with aria-describedby. */
 function AuthField({
   label,
   hint,
@@ -62,7 +58,7 @@ function PasswordInput({ className, ...props }: ComponentProps<"input">) {
         type="button"
         aria-pressed={shown}
         aria-label={shown ? "Hide password" : "Show password"}
-        onClick={() => setShown((s) => !s)}
+        onClick={() => setShown((wasShown) => !wasShown)}
         className="absolute top-1/2 right-1.5 grid size-8 -translate-y-1/2 place-items-center rounded-pill text-fg-muted hover:bg-row-hover hover:text-fg"
       >
         <Icon name={shown ? "eye-off" : "eye"} size={16} />
@@ -71,7 +67,6 @@ function PasswordInput({ className, ...props }: ComponentProps<"input">) {
   );
 }
 
-/** Banner for errors from the auth provider (wrong password, expired link…). */
 export function FormAlert({ children }: { children: ReactNode }) {
   return (
     <div role="alert" className="flex items-start gap-2.5 rounded-inner bg-danger-bg px-4 py-3 text-[13px] leading-5 text-danger">
@@ -81,7 +76,7 @@ export function FormAlert({ children }: { children: ReactNode }) {
   );
 }
 
-/** Google sign-in. Before launch, swap in the official "Continue with Google" button, which Google's branding rules require. */
+// Before launch, swap in the official "Continue with Google" button, which Google's branding rules require.
 export function GoogleButton({ next = "/" }: { next?: string }) {
   const [pending, start] = useTransition();
   const [error, setError] = useState<string>();
@@ -263,15 +258,15 @@ export function ResetPasswordForm() {
   );
 }
 
-/** Resend with a 30-second wait so people can't flood their inbox. */
+// 30-second wait so people can't flood their inbox.
 export function ResendEmail({ email }: { email?: string }) {
   const [wait, setWait] = useState(0);
   const [pending, start] = useTransition();
   const [error, setError] = useState<string>();
   useEffect(() => {
     if (!wait) return;
-    const t = setTimeout(() => setWait((w) => w - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setWait((seconds) => seconds - 1), 1000);
+    return () => clearTimeout(timer);
   }, [wait]);
 
   return (

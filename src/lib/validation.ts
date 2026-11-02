@@ -31,10 +31,29 @@ export const mapsUrl = z
   .max(2048, "This link is too long.")
   .refine(isGoogleMapsUrl, "This is not a Google Maps link. Please copy it again.");
 
+export const optionalMapsUrl = z.union([z.literal(""), mapsUrl]);
+
+// Customers are sent to this link, so only Google's own review links are accepted.
+export const reviewUrl = z
+  .string()
+  .trim()
+  .min(1, "Please paste the Google review link.")
+  .max(2048, "This link is too long.")
+  .refine((value) => {
+    try {
+      const url = new URL(value);
+      if (url.protocol !== "https:") return false;
+      if (url.hostname === "g.page") return /^\/r\/[\w-]+\/review\/?$/.test(url.pathname);
+      if (url.hostname === "search.google.com") return url.pathname === "/local/writereview" && !!url.searchParams.get("placeid");
+      return false;
+    } catch {
+      return false;
+    }
+  }, "This is not a Google review link. In Google Business Profile, open Get more reviews and copy the link.");
+
 export const toneValues = ["Warm", "Friendly", "Professional", "Formal"] as const;
 export const approvalRules = ["2", "3", "all"] as const;
 
-/** First message per field, in the shape the forms show. */
 export function fieldErrors(error: z.ZodError) {
   const out: Record<string, string> = {};
   for (const issue of error.issues) {
@@ -48,6 +67,6 @@ export type ActionState = {
   error?: string;
   fieldErrors?: Record<string, string>;
   ok?: boolean;
-  /** Echoes submitted text fields so a failed submit doesn't clear them. */
+  // Echoes submitted text fields so a failed submit doesn't clear them.
   values?: Record<string, string>;
 };

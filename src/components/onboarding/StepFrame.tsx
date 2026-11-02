@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { Button, buttonClass } from "@/components/ui/Button";
 import Link from "next/link";
 
-/** Heading and body of one onboarding step. Grows to fill the screen so the footer sits at the bottom. */
 export function StepFrame({ title, description, children }: { title: string; description?: ReactNode; children: ReactNode }) {
   return (
     <div className="flex flex-1 flex-col gap-5">
@@ -15,10 +14,6 @@ export function StepFrame({ title, description, children }: { title: string; des
   );
 }
 
-/**
- * Back link, an optional skip, and the primary Continue, pinned to the bottom
- * of the step. Continue submits the step's form, so validation runs first.
- */
 export function StepFooter({
   backHref,
   continueLabel = "Continue",

@@ -7,8 +7,11 @@ import { TextInput } from "@/components/ui/Field";
 import { Icon } from "@/components/icons/Icon";
 import { saveBranchDetails } from "@/lib/settings-actions";
 
-/** Add or edit one branch. With `branch` it edits that branch; without it adds a new one. */
-export function BranchForm({ branch }: { branch?: { id: string; name: string; googleMapsUrl: string | null } }) {
+export function BranchForm({
+  branch,
+}: {
+  branch?: { id: string; name: string; googleMapsUrl: string | null; googleReviewUrl: string | null };
+}) {
   const [state, action, pending] = useActionState(saveBranchDetails, {});
   const id = useId();
   const errors = state.fieldErrors ?? {};
@@ -46,8 +49,34 @@ export function BranchForm({ branch }: { branch?: { id: string; name: string; go
           )}
         </div>
         <div className="flex flex-col gap-1.5">
+          <label htmlFor={`${id}-reviewUrl`} className="text-label font-semibold">
+            Google review link
+          </label>
+          <TextInput
+            id={`${id}-reviewUrl`}
+            name="reviewUrl"
+            type="url"
+            inputMode="url"
+            defaultValue={state.values?.reviewUrl ?? branch?.googleReviewUrl ?? ""}
+            placeholder="https://g.page/r/…/review"
+            aria-invalid={!!errors.reviewUrl}
+            aria-describedby={errors.reviewUrl ? `${id}-reviewUrl-error` : undefined}
+            className="h-field"
+          />
+          {errors.reviewUrl ? (
+            <p id={`${id}-reviewUrl-error`} className="flex items-center gap-1.5 text-[12.5px] text-danger">
+              <Icon name="alert" size={13} />
+              {errors.reviewUrl}
+            </p>
+          ) : (
+            <p className="text-[12px] text-fg-muted">
+              Customers who scan your QR code are sent here. In Google Business Profile, open Get more reviews and copy the link.
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col gap-1.5">
           <label htmlFor={`${id}-url`} className="text-label font-semibold">
-            Google Maps link
+            Google Maps link (optional)
           </label>
           <TextInput
             id={`${id}-url`}
