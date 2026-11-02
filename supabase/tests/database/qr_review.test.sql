@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
-select plan(11);
+select plan(17);
 
 -- Branches get a public code on their own, and it is unique.
 select ok(
@@ -31,10 +31,46 @@ select is(public.rate_limit_hit('other-key', 2, 600), true, 'another key has its
 insert into public.ai_usage_events (branch_id, user_id, model)
 select id, user_id, 'test-model' from public.branches where user_id = '22222222-2222-2222-2222-222222222222' limit 1;
 
+select ok(
+  (select outcome = 'ok' and attempt = 1 and operation = 'review_suggestions' and request_id is null
+   from public.ai_usage_events where model = 'test-model'),
+  'a minimal usage row picks up the defaults'
+);
+
+select lives_ok(
+  $$ insert into public.ai_usage_events
+       (branch_id, user_id, model, request_id, attempt, outcome, token_metadata, latency_ms, estimated_cost_usd)
+     select id, user_id, 'gemini-2.5-flash', '33333333-3333-3333-3333-333333333333', 1, 'ok',
+       '{"input_tokens":120,"output_tokens":40,"thinking_tokens":300,"total_tokens":460,"cached_tokens":0}', 850, 0.00079
+     from public.branches where user_id = '11111111-1111-1111-1111-111111111111' limit 1 $$,
+  'a full usage row inserts'
+);
+select is(
+  (select token_metadata ->> 'thinking_tokens' from public.ai_usage_events where request_id = '33333333-3333-3333-3333-333333333333'),
+  '300',
+  'the token breakdown is stored in token_metadata'
+);
+select throws_ok(
+  $$ insert into public.ai_usage_events (branch_id, user_id, model, request_id, attempt)
+     select id, user_id, 'gemini-2.5-flash', '33333333-3333-3333-3333-333333333333', 1
+     from public.branches where user_id = '11111111-1111-1111-1111-111111111111' limit 1 $$,
+  '23505',
+  null,
+  'the same request and attempt cannot be logged twice'
+);
+select throws_ok(
+  $$ insert into public.ai_usage_events (branch_id, user_id, model, outcome)
+     select id, user_id, 'gemini-2.5-flash', 'unknown' from public.branches where user_id = '11111111-1111-1111-1111-111111111111' limit 1 $$,
+  '23514',
+  null,
+  'an unknown outcome is refused'
+);
+
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}', true);
 
-select is((select count(*) from public.ai_usage_events), 0::bigint, 'A cannot read B''s AI usage');
+select is((select count(*) from public.ai_usage_events where user_id = '22222222-2222-2222-2222-222222222222'), 0::bigint, 'A cannot read B''s AI usage');
+select is((select count(*) from public.ai_usage_events where user_id = '11111111-1111-1111-1111-111111111111'), 1::bigint, 'A can read their own AI usage');
 select throws_ok('select * from public.rate_limits', '42501', null, 'owners cannot read rate limit counters');
 select throws_ok(
   $$ select public.rate_limit_hit('x', 1, 60) $$,

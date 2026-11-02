@@ -21,7 +21,13 @@ Gemini gets only the rating, the chosen chips, the comment and the business name
 - `rate_limits` and `ai_usage_events` have row level security on. Anonymous visitors cannot read or write them. Only the service role writes.
 
 ## Database
-Migration `20261105000000_qr_review.sql` adds `branches.google_review_url`, `branches.qr_code` and `branches.ai_paused`, the `ai_usage_events` table (model and token counts for each Gemini call) and the `rate_limits` table with `rate_limit_hit`. Tests are in `supabase/tests/database/qr_review.test.sql`.
+Migration `20261105000000_qr_review.sql` adds `branches.google_review_url`, `branches.qr_code` and `branches.ai_paused`, the `ai_usage_events` table (model and token counts for each Gemini call; see the next paragraph for how it looks now) and the `rate_limits` table with `rate_limit_hit`. Tests are in `supabase/tests/database/qr_review.test.sql`.
+
+Migration `20261106000000_ai_usage_detail.sql` makes `ai_usage_events` a per-attempt log. Each Gemini attempt gets a row, and so does each template fallback:
+- `outcome` is `ok`, `rejected` (Gemini answered and was billed, but the text was unusable), `error` (the call threw) or `fallback` (template text served, model `template`, `error_message` holds `no_api_key` or `gemini_unusable`).
+- `request_id` and `attempt` group the attempts of one customer request. `unique (request_id, attempt)` stops duplicates.
+- `token_metadata` holds all the token counts in one place, with plain names: `input_tokens`, `output_tokens`, `thinking_tokens`, `total_tokens` and `cached_tokens`. The old `input_tokens` and `output_tokens` columns were removed by migration `20261107000000_ai_usage_token_metadata.sql`, which first moved any counts already logged into it. It is null for `error` and `fallback` rows. To sum, use `(token_metadata->>'input_tokens')::int`.
+- `latency_ms` and `estimated_cost_usd`. Cost uses the list prices in `src/lib/ai/pricing.ts` (input tokens at the input rate, output plus thinking tokens at the output rate) and is stored when the row is written. It is 0 for API errors and fallbacks, and null (unknown) for timeouts, unknown models and responses without `usageMetadata`.
 
 Existing branches have no review link yet. Their QR page shows "not found" until the owner adds one (Branches, Edit).
 
@@ -34,3 +40,8 @@ Existing branches have no review link yet. Their QR page shows "not found" until
 - Benchmark Gemini models and set `GEMINI_MODEL`.
 - Scan counts are not collected (no `scan_events`), so the QR page shows no scan numbers.
 - `ai_paused` has no switch in the dashboard yet.
+- AI usage is logged but not shown or limited yet. Later, by area:
+  - Billing: monthly allowance check before each Gemini call, the real usage meter on the Billing page, and checking our cost estimate (timeouts included) against Google's invoice.
+  - User UI: real usage on the Overview and Insights pages, and a per-branch breakdown.
+  - Admin: a usage and cost view across all accounts, and alerts on errors, latency, fallback rate and spend spikes.
+  - Data and reliability: a rollup table with a retention policy, retries or a queue for the usage write, and a `provider` column.

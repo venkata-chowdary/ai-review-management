@@ -1,12 +1,14 @@
 "use server";
 
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { GoogleGenAI } from "@google/genai";
 import { headers } from "next/headers";
 import { after } from "next/server";
+import { modelPrices } from "@/lib/ai/pricing";
 import { getPublicBranch } from "@/lib/data/branches";
 import { qrAttributes, reviewInput, templateSuggestions } from "@/lib/qr/suggestions";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { TablesInsert } from "@/lib/supabase/database.types";
 
 const busy = { ok: false as const, error: "Too many requests right now. Please try again in a little while, or write your review on Google." };
 const failed = { ok: false as const, error: "Something went wrong. Please try again, or write your review on Google." };
@@ -34,12 +36,17 @@ export async function suggestReviews(input: unknown) {
   if (branchLimit.error || !branchLimit.data) return busy;
 
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const requestId = randomUUID();
+  const usageBase = { branch_id: branch.id, user_id: branch.userId, request_id: requestId, operation: "review_suggestions" };
+  const usageRows: TablesInsert<"ai_usage_events">[] = [];
   let generated: string[] = [];
-  let usage: { inputTokens?: number; outputTokens?: number } = {};
+  let attemptsMade = 0;
 
   if (process.env.GEMINI_API_KEY) {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY, httpOptions: { timeout: 10000 } });
-    for (let attempt = 0; attempt < 2 && generated.length < 2; attempt++) {
+    for (let attempt = 1; attempt <= 2 && generated.length < 2; attempt++) {
+      attemptsMade = attempt;
+      const startedAt = Date.now();
       try {
         const response = await ai.models.generateContent({
           model,
@@ -61,7 +68,13 @@ export async function suggestReviews(input: unknown) {
             temperature: 0.8,
           },
         });
-        const suggestions = JSON.parse(response.text ?? "{}").suggestions;
+        const latencyMs = Date.now() - startedAt;
+        let suggestions;
+        try {
+          suggestions = JSON.parse(response.text ?? "{}").suggestions;
+        } catch {
+          suggestions = undefined;
+        }
         generated = Array.isArray(suggestions)
           ? suggestions
               .filter((suggestion) => typeof suggestion === "string")
@@ -69,27 +82,65 @@ export async function suggestReviews(input: unknown) {
               .filter((suggestion) => suggestion.length >= 10 && suggestion.length <= 600 && !/https?:\/\/|www\.|\d{8,}/i.test(suggestion))
               .slice(0, 3)
           : [];
-        usage = { inputTokens: response.usageMetadata?.promptTokenCount, outputTokens: response.usageMetadata?.candidatesTokenCount };
+        // A response that came back was billed, even when the text is not usable.
+        const usageMetadata = response.usageMetadata;
+        if (!usageMetadata) console.error("Gemini response had no usageMetadata:", model);
+        const price = modelPrices[model];
+        // Gemini leaves a count out when it is zero, so a missing one means 0.
+        const tokens = {
+          input_tokens: usageMetadata?.promptTokenCount ?? 0,
+          output_tokens: usageMetadata?.candidatesTokenCount ?? 0,
+          thinking_tokens: usageMetadata?.thoughtsTokenCount ?? 0,
+          total_tokens: usageMetadata?.totalTokenCount ?? 0,
+          cached_tokens: usageMetadata?.cachedContentTokenCount ?? 0,
+        };
+        usageRows.push({
+          ...usageBase,
+          attempt,
+          model,
+          outcome: generated.length >= 2 ? "ok" : "rejected",
+          token_metadata: usageMetadata ? tokens : null,
+          latency_ms: latencyMs,
+          estimated_cost_usd:
+            usageMetadata && price
+              ? (tokens.input_tokens * price.inputPerMillion + (tokens.output_tokens + tokens.thinking_tokens) * price.outputPerMillion) / 1_000_000
+              : null,
+        });
       } catch (error) {
         console.error("Gemini suggestion attempt failed:", model, error instanceof Error ? error.message.slice(0, 200) : error);
         generated = [];
+        // A timeout gives up on a request Google may still bill, so its cost is unknown. Other errors were refused.
+        const timedOut = error instanceof Error && error.name === "AbortError";
+        usageRows.push({
+          ...usageBase,
+          attempt,
+          model,
+          outcome: "error",
+          error_message: timedOut ? "timeout" : (error instanceof Error ? error.message : String(error)).slice(0, 200),
+          latency_ms: Date.now() - startedAt,
+          estimated_cost_usd: timedOut ? null : 0,
+        });
       }
     }
   }
 
-  if (generated.length >= 2) {
-    after(async () => {
-      const { error } = await supabase.from("ai_usage_events").insert({
-        branch_id: branch.id,
-        user_id: branch.userId,
-        model,
-        input_tokens: usage.inputTokens,
-        output_tokens: usage.outputTokens,
-      });
-      if (error) console.error("ai_usage_events insert failed:", error.message);
+  if (generated.length < 2) {
+    usageRows.push({
+      ...usageBase,
+      attempt: attemptsMade + 1,
+      model: "template",
+      outcome: "fallback",
+      error_message: process.env.GEMINI_API_KEY ? "gemini_unusable" : "no_api_key",
+      estimated_cost_usd: 0,
     });
-    return { ok: true as const, suggestions: generated };
   }
+
+  after(async () => {
+    const { error } = await supabase.from("ai_usage_events").insert(usageRows);
+    if (error) console.error("ai_usage_events insert failed:", error.message);
+  });
+
+  if (generated.length >= 2) return { ok: true as const, suggestions: generated };
 
   return { ok: true as const, suggestions: templateSuggestions(branch.businessName, rating, attributes, comment) };
 }

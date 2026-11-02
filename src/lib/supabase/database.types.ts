@@ -41,30 +41,48 @@ export type Database = {
     Tables: {
       ai_usage_events: {
         Row: {
+          attempt: number
           branch_id: string
           created_at: string
+          error_message: string | null
+          estimated_cost_usd: number | null
           id: string
-          input_tokens: number | null
+          latency_ms: number | null
           model: string
-          output_tokens: number | null
+          operation: string
+          outcome: string
+          request_id: string | null
+          token_metadata: Json | null
           user_id: string
         }
         Insert: {
+          attempt?: number
           branch_id: string
           created_at?: string
+          error_message?: string | null
+          estimated_cost_usd?: number | null
           id?: string
-          input_tokens?: number | null
+          latency_ms?: number | null
           model: string
-          output_tokens?: number | null
+          operation?: string
+          outcome?: string
+          request_id?: string | null
+          token_metadata?: Json | null
           user_id: string
         }
         Update: {
+          attempt?: number
           branch_id?: string
           created_at?: string
+          error_message?: string | null
+          estimated_cost_usd?: number | null
           id?: string
-          input_tokens?: number | null
+          latency_ms?: number | null
           model?: string
-          output_tokens?: number | null
+          operation?: string
+          outcome?: string
+          request_id?: string | null
+          token_metadata?: Json | null
           user_id?: string
         }
         Relationships: [

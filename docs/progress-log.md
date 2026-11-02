@@ -2,7 +2,11 @@
 
 Newest entries first. Add a new entry at the top for each milestone.
 
-## 4 Nov 2026: customer QR review journey (Phase 4)
+## 3 Nov 2026 (latest): detailed AI usage logging
+
+`ai_usage_events` now records every Gemini attempt (including failed and rejected ones) and every template fallback, with the full token breakdown, latency and estimated cost. See `phase-4-qr-review.md`. Migrations `20261106000000_ai_usage_detail.sql` and `20261107000000_ai_usage_token_metadata.sql` are applied to the development project. The database tests (`npm run db:test`) and a real Gemini call still need to be run. Billing, dashboard and admin views of this data are listed there as later work.
+
+## 3 Nov 2026: customer QR review journey (Phase 4)
 
 QR page, Gemini suggestions, rate limiting and real QR codes are built. See `phase-4-qr-review.md`. Owners now paste Google's own review link per branch; customers rate, pick suggestions, edit and post on Google themselves. `tsc`, lint, `next build` and the unit tests pass. The new migration and database tests, and the Gemini call, still need to be run against a real project.
 
@@ -12,31 +16,38 @@ Sign-up, sign-in, password reset, sign-out, Google sign-in code, route protectio
 
 ## Current status
 
-Phase 2 (database and security foundation) is complete on a development Supabase project. The database has businesses and locations, and each user can only reach their own rows. The screens still run on sample data, and there is no sign-in page, AI or Google connection yet.
+Phases 0–4 code is complete. Phase 2 has been applied to a development Supabase project with row level security. Phases 3 and 4 migrations are pending application. The app has sign-in, onboarding with branch setup, real QR codes with Gemini suggestions (fallback to templates), rate limiting, and customer review flow—all on sample data without real Google or Gemini APIs yet.
 
 | Phase | Scope | State |
 |---|---|---|
-| Phase 0 | Repository setup, design inventory, Google API access research | Setup done; owner actions open |
+| Phase 0 | Repository setup, design inventory, Google API access research | Done; owner actions remain |
 | Phase 1 | App shell, all screens, loading/empty/error states, sample data | Done |
-| Phase 2 | Supabase schema, row level security, server clients, setup docs | Done |
-| Phase 3 | Sign-in, onboarding, branches, route protection | Code done; migrations to apply and test |
-| Phase 4 | QR landing page, Gemini suggestions, rate limiting, real QR codes | Code done; migration to apply and test |
-| Next | Real data in place of sample data (one table per feature) | Not started |
+| Phase 2 | Supabase schema, row level security, server clients, setup docs | Applied to development project |
+| Phase 3 | Sign-in, onboarding, branches, route protection | Code done; 2 migrations pending |
+| Phase 4 | QR landing page, Gemini suggestions, rate limiting, real QR codes | Code done; 1 migration pending |
+| Phase 5 | Real data: reviews, Google connection, insights | Not started |
 
-## Open items and blockers
+## Next steps
 
-- [ ] Confirm a Google Business Profile that has been verified for 60+ days and lists a website, then submit the GBP API access form. Google publishes no approval timeline, so this blocks review sync and replies.
-- [x] Create a development Supabase project and fill `.env.local` (done 2 Nov 2026).
-- [ ] Create the Google Cloud project and fill its variables in `.env.local`.
-- [ ] Empty the stray `.env` file; the same Supabase keys are in `.env.local`.
-- [ ] Create a separate Supabase project for production, and never run `seed.sql` there.
-- [ ] Switch local Node to 22 or 24 LTS (currently 23.7).
-- [ ] Benchmark 2–3 Gemini models on about 20 sample QR inputs; record tokens and cost.
-- [ ] Confirm the QR → Google review link format on Android and iOS.
-- [ ] Push the `locations` → `branches` migration to the development project (`npx supabase db push`), rerun the database tests, then regenerate types with `npm run db:types`.
-- [ ] Decide the product name and domain (needed for the Google sign-in consent screen and legal pages).
-- [ ] Choose rate-limiting and error-monitoring providers (Upstash and Sentry proposed).
-- [ ] Review the provisional screens (Insights, QR codes, AI replies, Locations, Billing, Settings, customer QR page).
+**Critical path** (next week)
+- [ ] Push Phase 3 migrations (onboarding, branches) to development project
+- [ ] Run `npm run db:test` after applying migrations
+- [ ] Test sign-in, onboarding, and branch flow by hand
+- [ ] Push Phase 4 migration (QR, rate limiting, Gemini) 
+- [ ] Set up and test Gemini API (benchmark 2–3 models on sample QR inputs)
+- [ ] Confirm QR code scans on Android and iOS
+- [ ] Test with real Google Business Profile link
+
+**Blockers**
+- [ ] Confirm a Google Business Profile (60+ days verified, with website) and submit GBP API access form
+- [ ] Create Google Cloud project and fill GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET in `.env.local`
+- [ ] Create Supabase production project (never run seed.sql there)
+
+**Future**
+- [ ] Decide product name and domain (for Google consent screen and legal pages)
+- [ ] Choose error-monitoring provider (Sentry proposed)
+- [ ] Switch local Node to 22 or 24 LTS
+- [ ] Empty the stray `.env` file; use `.env.local` only
 
 ## 3 Nov 2026 — Sign-in and onboarding screens (provisional), locations renamed to branches
 
