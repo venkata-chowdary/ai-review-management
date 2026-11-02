@@ -7,23 +7,23 @@ select plan(17);
 create temp table ids as
 select
   (select id from public.businesses where user_id = '22222222-2222-2222-2222-222222222222') as b_business_id,
-  (select id from public.locations where user_id = '22222222-2222-2222-2222-222222222222' limit 1) as b_location_id;
+  (select id from public.branches where user_id = '22222222-2222-2222-2222-222222222222' limit 1) as b_branch_id;
 grant select on ids to authenticated;
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}', true);
 
 select is((select count(*) from public.businesses), 1::bigint, 'A sees only their own business');
-select is((select count(*) from public.locations), 2::bigint, 'A sees only their own locations');
+select is((select count(*) from public.branches), 2::bigint, 'A sees only their own branches');
 select is(
   (select count(*) from public.businesses where id = (select b_business_id from ids)),
   0::bigint,
   'A cannot read B''s business by id'
 );
 select is(
-  (select count(*) from public.locations where id = (select b_location_id from ids)),
+  (select count(*) from public.branches where id = (select b_branch_id from ids)),
   0::bigint,
-  'A cannot read B''s location by id'
+  'A cannot read B''s branch by id'
 );
 
 with changed as (
@@ -32,9 +32,9 @@ with changed as (
 select is((select count(*) from changed), 0::bigint, 'A cannot update B''s business');
 
 with changed as (
-  update public.locations set branch_name = 'hacked' where id = (select b_location_id from ids) returning 1
+  update public.branches set name = 'hacked' where id = (select b_branch_id from ids) returning 1
 )
-select is((select count(*) from changed), 0::bigint, 'A cannot update B''s location');
+select is((select count(*) from changed), 0::bigint, 'A cannot update B''s branch');
 
 with removed as (
   delete from public.businesses where id = (select b_business_id from ids) returning 1
@@ -42,32 +42,32 @@ with removed as (
 select is((select count(*) from removed), 0::bigint, 'A cannot delete B''s business');
 
 with removed as (
-  delete from public.locations where id = (select b_location_id from ids) returning 1
+  delete from public.branches where id = (select b_branch_id from ids) returning 1
 )
-select is((select count(*) from removed), 0::bigint, 'A cannot delete B''s location');
+select is((select count(*) from removed), 0::bigint, 'A cannot delete B''s branch');
 
 select throws_ok(
-  $$insert into public.locations (business_id, user_id, branch_name)
+  $$insert into public.branches (business_id, user_id, name)
     values ((select b_business_id from ids), '22222222-2222-2222-2222-222222222222', 'x')$$,
   '42501',
   null,
-  'A cannot insert a location owned by B'
+  'A cannot insert a branch owned by B'
 );
 
 select throws_ok(
-  $$insert into public.locations (business_id, user_id, branch_name)
+  $$insert into public.branches (business_id, user_id, name)
     values ((select b_business_id from ids), '11111111-1111-1111-1111-111111111111', 'x')$$,
   '23503',
   null,
-  'A cannot attach a location to B''s business'
+  'A cannot attach a branch to B''s business'
 );
 
 select throws_ok(
-  $$update public.locations set user_id = '22222222-2222-2222-2222-222222222222'
+  $$update public.branches set user_id = '22222222-2222-2222-2222-222222222222'
     where user_id = '11111111-1111-1111-1111-111111111111'$$,
   '42501',
   null,
-  'A cannot hand their location to B'
+  'A cannot hand their branch to B'
 );
 
 select throws_ok(
@@ -91,16 +91,16 @@ select lives_ok(
 );
 
 select lives_ok(
-  $$insert into public.locations (business_id, user_id, branch_name)
+  $$insert into public.branches (business_id, user_id, name)
     values ((select id from public.businesses), '11111111-1111-1111-1111-111111111111', 'Harbour')$$,
-  'A can add a location to their own business'
+  'A can add a branch to their own business'
 );
 
 reset role;
 set local role anon;
 
 select throws_ok('select * from public.businesses', '42501', null, 'signed-out visitors cannot read businesses');
-select throws_ok('select * from public.locations', '42501', null, 'signed-out visitors cannot read locations');
+select throws_ok('select * from public.branches', '42501', null, 'signed-out visitors cannot read branches');
 
 select * from finish();
 rollback;

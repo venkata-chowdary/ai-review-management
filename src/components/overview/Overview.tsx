@@ -6,7 +6,7 @@ import { StatusBadge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Avatar, Card, Meter, Rating, SectionTitle, Spark } from "@/components/ui/Display";
 import { EmptyState, Skeleton } from "@/components/ui/States";
-import { getLocation } from "@/lib/mock/loaders";
+import { getBranch } from "@/lib/mock/loaders";
 import type { Kpi, Review, Usage } from "@/lib/mock/types";
 
 const qIcon = "grid size-9 flex-none place-items-center rounded-pill";
@@ -122,7 +122,7 @@ export function RecentReviews({ reviews, query }: { reviews: Review[]; query: st
       </div>
       {reviews.length === 0 ? (
         <EmptyState title="No reviews yet" className="border-t border-line">
-          New Google reviews appear here once a location is connected.
+          New Google reviews appear here once a branch is connected.
         </EmptyState>
       ) : (
         <>
@@ -133,7 +133,7 @@ export function RecentReviews({ reviews, query }: { reviews: Review[]; query: st
                 <th className="w-[150px]">Reviewer</th>
                 <th className="w-24">Rating</th>
                 <th>Review</th>
-                <th className="hidden w-24 xl:table-cell">Location</th>
+                <th className="hidden w-24 xl:table-cell">Branch</th>
                 <th className="w-[150px]">Status</th>
                 <th className="w-16">When</th>
               </tr>
@@ -159,7 +159,7 @@ export function RecentReviews({ reviews, query }: { reviews: Review[]; query: st
                   <td>
                     <span className="block truncate text-fg-muted">{r.text}</span>
                   </td>
-                  <td className="hidden text-fg-muted xl:table-cell">{getLocation(r.locationId)?.name}</td>
+                  <td className="hidden text-fg-muted xl:table-cell">{getBranch(r.branchId)?.name}</td>
                   <td>
                     <StatusBadge status={r.status} />
                   </td>

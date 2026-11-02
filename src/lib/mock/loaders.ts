@@ -1,8 +1,8 @@
 import {
   attributeMentions,
   kpis,
-  locations,
-  locationStats,
+  branches,
+  branchStats,
   ratingBreakdown,
   replyKpis,
   reviews,
@@ -13,7 +13,7 @@ import {
   weeklyReviews,
   weeklySentiment,
 } from "./data";
-import type { DemoState, Location, Overview, ReplyStatus, Review } from "./types";
+import type { DemoState, Branch, Overview, ReplyStatus, Review } from "./types";
 
 // Async loaders shaped like the future Supabase queries. Phase 2 swaps their
 // bodies; pages and components keep calling them the same way.
@@ -37,21 +37,21 @@ async function prepare(state?: DemoState) {
   if (state === "error") throw new Error("Couldn’t load data. (Simulated with ?state=error.)");
 }
 
-export function getLocation(id: string | undefined): Location | undefined {
-  return locations.find((l) => l.id === id);
+export function getBranch(id: string | undefined): Branch | undefined {
+  return branches.find((l) => l.id === id);
 }
 
-export function getLocationByQrCode(code: string): Location | undefined {
-  return locations.find((l) => l.qrCode === code);
+export function getBranchByQrCode(code: string): Branch | undefined {
+  return branches.find((l) => l.qrCode === code);
 }
 
-function forLocation(list: Review[], locationId?: string) {
-  return locationId && getLocation(locationId) ? list.filter((r) => r.locationId === locationId) : list;
+function forBranch(list: Review[], branchId?: string) {
+  return branchId && getBranch(branchId) ? list.filter((r) => r.branchId === branchId) : list;
 }
 
-export async function getOverview({ state, locationId }: { state?: DemoState; locationId?: string } = {}): Promise<Overview> {
+export async function getOverview({ state, branchId }: { state?: DemoState; branchId?: string } = {}): Promise<Overview> {
   await prepare(state);
-  const scoped = state === "empty" ? [] : forLocation(reviews, locationId);
+  const scoped = state === "empty" ? [] : forBranch(reviews, branchId);
   return {
     ...today,
     awaitingApproval: scoped.filter((r) => NEEDS_REPLY.includes(r.status)).length,
@@ -67,17 +67,17 @@ export type ReviewTab = "needs-reply" | "all" | "failed";
 
 export async function getReviews({
   state,
-  locationId,
+  branchId,
   tab = "needs-reply",
   query,
 }: {
   state?: DemoState;
-  locationId?: string;
+  branchId?: string;
   tab?: ReviewTab;
   query?: string;
 } = {}) {
   await prepare(state);
-  let scoped = state === "empty" ? [] : forLocation(reviews, locationId);
+  let scoped = state === "empty" ? [] : forBranch(reviews, branchId);
   if (query) {
     const q = query.toLowerCase();
     scoped = scoped.filter((r) => r.reviewer.toLowerCase().includes(q) || r.text.toLowerCase().includes(q));
@@ -92,9 +92,9 @@ export async function getReviews({
   return { reviews: list, counts };
 }
 
-export async function getLocations({ state }: { state?: DemoState } = {}) {
+export async function getBranches({ state }: { state?: DemoState } = {}) {
   await prepare(state);
-  return state === "empty" ? [] : locations;
+  return state === "empty" ? [] : branches;
 }
 
 export async function getUsage({ state }: { state?: DemoState } = {}) {
@@ -118,7 +118,7 @@ export async function getInsights({ state }: { state?: DemoState } = {}) {
     sentimentTrend: empty ? [] : weeklySentiment,
     ratingBreakdown: empty ? ratingBreakdown.map((r) => ({ ...r, count: 0 })) : ratingBreakdown,
     sentiment: empty ? [] : sentimentSplit,
-    byLocation: empty ? [] : locationStats.map((s) => ({ ...s, location: getLocation(s.locationId)! })),
+    byBranch: empty ? [] : branchStats.map((s) => ({ ...s, branch: getBranch(s.branchId)! })),
     attributes: empty ? [] : attributeMentions,
   };
 }

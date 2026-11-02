@@ -41,7 +41,7 @@ export function Segmented<T extends string>({
             data-value={o.value}
             onClick={() => onChange(o.value)}
             className={cn(
-              "h-tab rounded-pill px-3.5 text-[13px] font-semibold whitespace-nowrap transition-colors",
+              "h-9 rounded-pill px-4 text-[14px] font-semibold whitespace-nowrap transition-colors",
               checked ? "bg-surface text-primary-text shadow-segment" : "text-fg-muted hover:text-fg",
             )}
           >

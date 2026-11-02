@@ -4,15 +4,12 @@ import { cn } from "@/lib/cn";
 // Filter / attribute chip. Selected chips turn blue-tinted with a ring.
 export function Chip({
   pressed,
-  size = "sm",
   count,
   className,
   children,
   ...props
 }: {
   pressed: boolean;
-  /** "lg" is the 44px touch size used on the QR page. */
-  size?: "sm" | "lg";
   count?: ReactNode;
   children: ReactNode;
 } & Omit<ComponentProps<"button">, "children">) {
@@ -21,8 +18,8 @@ export function Chip({
       type="button"
       aria-pressed={pressed}
       className={cn(
-        "press inline-flex items-center gap-1.5 rounded-pill font-semibold transition-[transform,background-color] duration-150 active:scale-[.97]",
-        size === "lg" ? "h-field px-4 text-[14px]" : "h-control-sm px-3.5 text-[13px]",
+        // Same height and type size as Button size="md" (Save / Continue).
+        "press inline-flex h-control-md items-center gap-1.5 rounded-pill px-4 text-[14px] font-semibold transition-[transform,background-color] duration-150 active:scale-[.97]",
         pressed
           ? "bg-selection text-primary-text shadow-[inset_0_0_0_1px_var(--selection-border)]"
           : "bg-surface text-fg shadow-button-light hover:bg-row-hover",

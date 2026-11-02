@@ -54,7 +54,7 @@ async function ReviewsContent({ searchParams }: Pick<PageProps<"/reviews">, "sea
   const loc = one(params.loc);
   const explicitId = one(params.id);
 
-  const { reviews, counts } = await getReviews({ state, tab, query: q, locationId: loc });
+  const { reviews, counts } = await getReviews({ state, tab, query: q, branchId: loc });
   const selected = reviews.find((r) => r.id === explicitId) ?? reviews[0];
   const base: Query = { tab, q, loc };
 
@@ -157,7 +157,7 @@ function ListEmpty({ tab, q, clearHref, allHref }: { tab: ReviewTab; q?: string;
       </EmptyState>
     );
   return (
-    <EmptyState title="No reviews yet">New Google reviews appear here once a location is connected.</EmptyState>
+    <EmptyState title="No reviews yet">New Google reviews appear here once a branch is connected.</EmptyState>
   );
 }
 

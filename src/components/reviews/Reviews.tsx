@@ -5,7 +5,7 @@ import { Icon } from "@/components/icons/Icon";
 import { StatusBadge } from "@/components/ui/Badge";
 import { Avatar, Rating, SentimentLabel } from "@/components/ui/Display";
 import { Skeleton } from "@/components/ui/States";
-import { getLocation } from "@/lib/mock/loaders";
+import { getBranch } from "@/lib/mock/loaders";
 import type { Kpi, Review } from "@/lib/mock/types";
 import { DraftPanel } from "./DraftPanel";
 
@@ -69,7 +69,7 @@ export function ReviewRow({
         <span className="flex flex-wrap items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1">
             <Rating value={review.rating} />
-            <span className="text-[12px] font-medium text-fg-muted">· {getLocation(review.locationId)?.name}</span>
+            <span className="text-[12px] font-medium text-fg-muted">· {getBranch(review.branchId)?.name}</span>
           </span>
           <StatusBadge status={review.status} />
         </span>
@@ -79,7 +79,7 @@ export function ReviewRow({
 }
 
 export function ReviewDetail({ review }: { review: Review }) {
-  const location = getLocation(review.locationId);
+  const branch = getBranch(review.branchId);
   return (
     <article aria-label={`Review by ${review.reviewer}`} className="flex flex-col gap-4 px-4 py-5 md:px-7 md:py-[22px]">
       <header className="flex items-start gap-3">
@@ -91,7 +91,7 @@ export function ReviewDetail({ review }: { review: Review }) {
             <SentimentLabel value={review.sentiment} />
             <span className="inline-flex items-center gap-1">
               <Icon name="store" size={13} />
-              Google · {location?.name}
+              Google · {branch?.name}
             </span>
             <span>{review.receivedAt}</span>
           </div>

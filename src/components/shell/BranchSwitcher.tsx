@@ -3,15 +3,18 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@/components/icons/Icon";
 import { Menu, PillContent, pillTriggerClass, type MenuOption } from "@/components/ui/Menu";
-import { locations } from "@/lib/mock/data";
+import { useShellBranches } from "./ShellContext";
 
-const options: MenuOption[] = [
-  { value: "", label: "All locations", hint: `${locations.length} locations` },
-  ...locations.map((l) => ({ value: l.id, label: l.name, hint: l.address })),
-];
+function useOptions(): MenuOption[] {
+  const branches = useShellBranches();
+  return [
+    { value: "", label: "All branches", hint: `${branches.length} ${branches.length === 1 ? "branch" : "branches"}` },
+    ...branches.map((b) => ({ value: b.id, label: b.name, hint: b.hasMapsLink ? "Maps link added" : "No Maps link" })),
+  ];
+}
 
-/** Keeps the selected location in ?loc= so every page and link can read it. */
-function useLocationParam() {
+/** Keeps the selected branch in ?loc= so every page and link can read it. */
+function useBranchParam() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -28,11 +31,12 @@ function useLocationParam() {
 }
 
 /** Raised white pill at the top of the sidebar. */
-export function SidebarLocationSwitcher() {
-  const [value, set] = useLocationParam();
+export function SidebarBranchSwitcher() {
+  const [value, set] = useBranchParam();
+  const options = useOptions();
   return (
     <Menu
-      label="Choose location"
+      label="Choose branch"
       value={value}
       options={options}
       onChange={set}
@@ -52,11 +56,12 @@ export function SidebarLocationSwitcher() {
 }
 
 /** Bordered pill used in page headers. */
-export function PillLocationSwitcher({ align }: { align?: "start" | "end" }) {
-  const [value, set] = useLocationParam();
+export function PillBranchSwitcher({ align }: { align?: "start" | "end" }) {
+  const [value, set] = useBranchParam();
+  const options = useOptions();
   return (
     <Menu
-      label="Choose location"
+      label="Choose branch"
       value={value}
       options={options}
       onChange={set}
@@ -67,17 +72,18 @@ export function PillLocationSwitcher({ align }: { align?: "start" | "end" }) {
   );
 }
 
-export function LocationSwitcherFallback({ variant }: { variant: "sidebar" | "pill" }) {
+export function BranchSwitcherFallback({ variant }: { variant: "sidebar" | "pill" }) {
+  const count = useShellBranches().length;
   return variant === "pill" ? (
     <span className={pillTriggerClass}>
-      <PillContent icon="pin">All locations</PillContent>
+      <PillContent icon="pin">All branches</PillContent>
     </span>
   ) : (
     <span className="flex w-full items-center gap-2.5 rounded-pill bg-sidebar-raised px-3 py-[9px] shadow-button-light">
       <Icon name="pin" />
       <span className="flex-1 text-[13px] leading-[17px] font-semibold">
-        All locations
-        <small className="block text-[11.5px] font-medium text-sidebar-muted">{locations.length} locations</small>
+        All branches
+        <small className="block text-[11.5px] font-medium text-sidebar-muted">{count} {count === 1 ? "branch" : "branches"}</small>
       </span>
       <Icon name="chevron-down" />
     </span>

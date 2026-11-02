@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { DateRange } from "@/components/overview/DateRange";
 import { KpiGrid, OverviewSkeleton, RatingBreakdown } from "@/components/overview/Overview";
-import { LocationSwitcherFallback, PillLocationSwitcher } from "@/components/shell/LocationSwitcher";
+import { BranchSwitcherFallback, PillBranchSwitcher } from "@/components/shell/BranchSwitcher";
 import { Card, Meter, Rating, SectionTitle, SentimentLabel } from "@/components/ui/Display";
 import { Page, PageHeader } from "@/components/ui/Page";
 import { EmptyState } from "@/components/ui/States";
@@ -17,11 +17,11 @@ export default function InsightsPage({ searchParams }: PageProps<"/insights">) {
     <Page>
       <PageHeader
         title="Insights"
-        description="How your reviews are trending across locations."
+        description="How your reviews are trending across branches."
         actions={
           <>
-            <Suspense fallback={<LocationSwitcherFallback variant="pill" />}>
-              <PillLocationSwitcher align="end" />
+            <Suspense fallback={<BranchSwitcherFallback variant="pill" />}>
+              <PillBranchSwitcher align="end" />
             </Suspense>
             <DateRange align="end" />
           </>
@@ -43,7 +43,7 @@ async function InsightsContent({ searchParams }: Pick<PageProps<"/insights">, "s
     return (
       <Card>
         <EmptyState icon="insights" title="Not enough reviews yet">
-          Insights appear once your locations have a few weeks of Google reviews.
+          Insights appear once your branches have a few weeks of Google reviews.
         </EmptyState>
       </Card>
     );
@@ -115,21 +115,21 @@ async function InsightsContent({ searchParams }: Pick<PageProps<"/insights">, "s
       </section>
 
       <Card className="overflow-hidden">
-        <SectionTitle className="px-5 pt-4 pb-3">By location</SectionTitle>
+        <SectionTitle className="px-5 pt-4 pb-3">By branch</SectionTitle>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-[13px]">
             <thead>
               <tr className="[&>th]:border-y [&>th]:border-line [&>th]:bg-app [&>th]:px-5 [&>th]:py-[9px] [&>th]:text-left [&>th]:text-[12px] [&>th]:font-semibold [&>th]:text-fg-muted">
-                <th>Location</th>
+                <th>Branch</th>
                 <th>Average rating</th>
                 <th>Reviews · 30d</th>
                 <th>Reply rate</th>
               </tr>
             </thead>
             <tbody>
-              {data.byLocation.map((l) => (
-                <tr key={l.locationId} className="[&>td]:border-b [&>td]:border-line [&>td]:px-5 [&>td]:py-[11px] last:[&>td]:border-b-0 hover:[&>td]:bg-row-hover">
-                  <td className="font-bold">{l.location.name}</td>
+              {data.byBranch.map((l) => (
+                <tr key={l.branchId} className="[&>td]:border-b [&>td]:border-line [&>td]:px-5 [&>td]:py-[11px] last:[&>td]:border-b-0 hover:[&>td]:bg-row-hover">
+                  <td className="font-bold">{l.branch.name}</td>
                   <td>
                     <Rating value={l.rating} />
                   </td>

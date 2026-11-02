@@ -39,70 +39,85 @@ export type Database = {
   }
   public: {
     Tables: {
-      businesses: {
+      branches: {
         Row: {
-          created_at: string
-          id: string
-          name: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      locations: {
-        Row: {
-          address: string | null
-          branch_name: string
           business_id: string
           created_at: string
+          google_maps_url: string | null
           id: string
+          name: string
           place_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          address?: string | null
-          branch_name: string
           business_id: string
           created_at?: string
+          google_maps_url?: string | null
           id?: string
+          name: string
           place_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          address?: string | null
-          branch_name?: string
           business_id?: string
           created_at?: string
+          google_maps_url?: string | null
           id?: string
+          name?: string
           place_id?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "locations_business_id_user_id_fkey"
+            foreignKeyName: "branches_business_id_user_id_fkey"
             columns: ["business_id", "user_id"]
             isOneToOne: false
             referencedRelation: "businesses"
             referencedColumns: ["id", "user_id"]
           },
         ]
+      }
+      businesses: {
+        Row: {
+          ai_approval_rule: string | null
+          ai_auto_publish: boolean
+          ai_tone: string | null
+          business_type: string | null
+          created_at: string
+          id: string
+          name: string
+          onboarding_step: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_approval_rule?: string | null
+          ai_auto_publish?: boolean
+          ai_tone?: string | null
+          business_type?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          onboarding_step?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_approval_rule?: string | null
+          ai_auto_publish?: boolean
+          ai_tone?: string | null
+          business_type?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          onboarding_step?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {

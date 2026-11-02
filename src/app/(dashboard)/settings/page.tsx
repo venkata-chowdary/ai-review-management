@@ -1,29 +1,23 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { BusinessNameForm } from "@/components/settings/BusinessNameForm";
 import { Button } from "@/components/ui/Button";
 import { Card, SectionTitle } from "@/components/ui/Display";
-import { Field, SettingRow, TextInput } from "@/components/ui/Field";
+import { SettingRow } from "@/components/ui/Field";
 import { Page, PageHeader } from "@/components/ui/Page";
-import { account, businessName } from "@/lib/mock/data";
+import { CardsSkeleton } from "@/components/ui/States";
+import { signOut } from "@/lib/auth/actions";
+import { requireOnboardedOwner } from "@/lib/data/business";
 
 export const metadata: Metadata = { title: "Settings" };
 
-// Provisional: composed from system components; no mockup exists yet.
-// Fields are read-only until accounts exist.
 export default function SettingsPage() {
   return (
     <Page className="max-w-content">
       <PageHeader title="Settings" description="Business details and account." />
-      <Card className="p-5">
-        <SectionTitle>Business</SectionTitle>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <Field label="Business name" htmlFor="biz-name">
-            <TextInput id="biz-name" defaultValue={businessName} readOnly />
-          </Field>
-          <Field label="Owner" htmlFor="owner">
-            <TextInput id="owner" defaultValue={account.name} readOnly />
-          </Field>
-        </div>
-      </Card>
+      <Suspense fallback={<CardsSkeleton cards={1} label="Loading settings" />}>
+        <BusinessCard />
+      </Suspense>
       <Card className="p-5">
         <SectionTitle className="mb-4">Notifications</SectionTitle>
         <SettingRow title="In-dashboard alerts" description="Approvals waiting, failed replies, Google access problems and AI allowance warnings.">
@@ -35,15 +29,29 @@ export default function SettingsPage() {
       </Card>
       <Card className="p-5">
         <SectionTitle className="mb-4">Account</SectionTitle>
-        <SettingRow title="Sign out" description="Sign-in arrives with accounts.">
-          <Button disabled>Sign out</Button>
+        <SettingRow title="Sign out" description="Ends your session on this device.">
+          <form action={signOut}>
+            <Button type="submit">
+              Sign out
+            </Button>
+          </form>
         </SettingRow>
-        <SettingRow title="Delete account" description="Removes your business, locations and QR pages.">
+        <SettingRow title="Delete account" description="Removes your business, branches and QR pages.">
           <Button variant="danger" icon="trash" disabled>
             Delete account
           </Button>
         </SettingRow>
       </Card>
     </Page>
+  );
+}
+
+async function BusinessCard() {
+  const { user, business } = await requireOnboardedOwner();
+  return (
+    <Card className="p-5">
+      <SectionTitle>Business</SectionTitle>
+      <BusinessNameForm name={business.name} email={user.email ?? ""} />
+    </Card>
   );
 }

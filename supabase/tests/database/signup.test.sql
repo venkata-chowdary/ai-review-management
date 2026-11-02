@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
-select plan(2);
+select plan(3);
 
 insert into auth.users (instance_id, id, aud, role, email, created_at, updated_at)
 values (
@@ -19,6 +19,12 @@ select is(
   (select name from public.businesses where user_id = '33333333-3333-3333-3333-333333333333'),
   '',
   'the new business starts with an empty name'
+);
+
+select is(
+  (select onboarding_step from public.businesses where user_id = '33333333-3333-3333-3333-333333333333'),
+  'business',
+  'a new business starts at the first onboarding step'
 );
 
 select * from finish();

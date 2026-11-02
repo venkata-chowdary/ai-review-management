@@ -7,7 +7,7 @@ import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, Note } from "@/components/ui/Display";
 import { Page, PageHeader } from "@/components/ui/Page";
 import { EmptyState, Skeleton } from "@/components/ui/States";
-import { demoState, getLocations } from "@/lib/mock/loaders";
+import { demoState, getBranches } from "@/lib/mock/loaders";
 
 export const metadata: Metadata = { title: "QR codes" };
 
@@ -34,13 +34,13 @@ export default function QrCodesPage({ searchParams }: PageProps<"/qr-codes">) {
 async function QrContent({ searchParams }: Pick<PageProps<"/qr-codes">, "searchParams">) {
   const state = demoState((await searchParams).state);
   if (state === "loading") return <QrSkeleton />;
-  const locations = await getLocations({ state });
+  const branches = await getBranches({ state });
 
-  if (locations.length === 0)
+  if (branches.length === 0)
     return (
       <Card>
-        <EmptyState icon="qr" title="No QR codes yet" action={<ButtonLink href="/locations">Add a location</ButtonLink>}>
-          Add a location first. Each location gets its own review page and QR code.
+        <EmptyState icon="qr" title="No QR codes yet" action={<ButtonLink href="/branches">Add a branch</ButtonLink>}>
+          Add a branch first. Each branch gets its own review page and QR code.
         </EmptyState>
       </Card>
     );
@@ -48,14 +48,14 @@ async function QrContent({ searchParams }: Pick<PageProps<"/qr-codes">, "searchP
   return (
     <>
       <section aria-label="QR codes" className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3">
-        {locations.map((l) => {
+        {branches.map((l) => {
           const path = `/r/${l.qrCode}`;
           return (
             <Card key={l.id} className="flex flex-col gap-4 p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-card-title font-semibold">{l.name}</h2>
-                  <p className="text-[12px] text-fg-muted">{l.address}</p>
+                  <p className="text-[12px] text-fg-muted">{l.scansThisMonth} scans this month</p>
                 </div>
                 <LiveBadge ok={!l.aiPaused}>{l.aiPaused ? "AI paused" : "Suggestions on"}</LiveBadge>
               </div>

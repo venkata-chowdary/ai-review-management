@@ -2,6 +2,10 @@
 
 Newest entries first. Add a new entry at the top for each milestone.
 
+## 3 Nov 2026: sign-in and onboarding wired (code complete, database not yet applied)
+
+Sign-up, sign-in, password reset, sign-out, Google sign-in code, route protection, onboarding saved to the database, and branch add/edit are built. See `phase-3-auth.md`. `tsc`, lint and `next build` pass. Not yet run against a database: the two pending migrations must be applied, the database tests run, and the flow tested by hand.
+
 ## Current status
 
 Phase 2 (database and security foundation) is complete on a development Supabase project. The database has businesses and locations, and each user can only reach their own rows. The screens still run on sample data, and there is no sign-in page, AI or Google connection yet.
@@ -11,7 +15,8 @@ Phase 2 (database and security foundation) is complete on a development Supabase
 | Phase 0 | Repository setup, design inventory, Google API access research | Setup done; owner actions open |
 | Phase 1 | App shell, all screens, loading/empty/error states, sample data | Done |
 | Phase 2 | Supabase schema, row level security, server clients, setup docs | Done |
-| Next | Sign-in pages, real data in place of sample data (one table per feature), QR suggestions via Gemini | Not started |
+| Phase 3 | Sign-in, onboarding, branches, route protection | Code done; migrations to apply and test |
+| Next |  real data in place of sample data (one table per feature), QR suggestions via Gemini | Not started |
 
 ## Open items and blockers
 
@@ -23,9 +28,45 @@ Phase 2 (database and security foundation) is complete on a development Supabase
 - [ ] Switch local Node to 22 or 24 LTS (currently 23.7).
 - [ ] Benchmark 2–3 Gemini models on about 20 sample QR inputs; record tokens and cost.
 - [ ] Confirm the QR → Google review link format on Android and iOS.
+- [ ] Push the `locations` → `branches` migration to the development project (`npx supabase db push`), rerun the database tests, then regenerate types with `npm run db:types`.
 - [ ] Decide the product name and domain (needed for the Google sign-in consent screen and legal pages).
 - [ ] Choose rate-limiting and error-monitoring providers (Upstash and Sentry proposed).
 - [ ] Review the provisional screens (Insights, QR codes, AI replies, Locations, Billing, Settings, customer QR page).
+
+## 3 Nov 2026 — Sign-in and onboarding screens (provisional), locations renamed to branches
+
+Sign-in pages and a five-step onboarding now exist as provisional screens on sample data. Every "location" in the app and the database is now a "branch". Wording is plain Indian English for non-technical owners: sign-in pages are minimal, and onboarding keeps about 70% of the first draft's explanations (step hints, why Google is needed, what it asks permission for, and a setup summary).
+
+**Decisions**
+
+- Sign-in pages have one short column that fits the screen without scrolling, and no side panel. The email field is labelled "Email".
+- Onboarding asks only for the branch name and its Google Maps link. There is no address and no Google search.
+- The AI replies step asks two plain questions: reply style (with a sample Google review and your reply under it), and who checks replies. The choices are "I will check every reply" (default), "Auto-post 4★ and 5★ replies" or "Auto-post 3★ to 5★ replies"; the auto-post choices unlock only after Google is connected. They are stored as `approvalRule` plus `autoPublish`. The old star rule did nothing while auto-reply was off, so it was removed.
+- The customer QR page shows suggestions one at a time in a horizontal swipe row; the visible one can be edited in place.
+- Database: `locations` → `branches`, `branch_name` → `name`, `address` dropped, `google_maps_url` added (https only). This is a new migration; the applied one is unchanged.
+
+**Built**
+
+| Item | What it does |
+|---|---|
+| `/sign-in`, `/sign-up`, `/check-email`, `/forgot-password`, `/reset-password` | Email and password forms with inline errors; a placeholder "Continue with Google" button |
+| `/onboarding/business`, `branch`, `google`, `replies`, `qr` | Five steps; answers kept in `sessionStorage` |
+| `/branches` | Formerly `/locations` |
+| `supabase/migrations/20261103000000_locations_to_branches.sql` | Renames the table, columns, indexes, constraints and policies |
+
+Preview states (development only): `/sign-in?state=error`, `/reset-password?state=error`, `/onboarding/google?state=error`.
+
+**Checked**
+
+- `tsc` and `npm run lint` pass.
+- In the browser: sign-up fits a 375×812 phone with no scroll; sign-in fits 1024×768. Onboarding runs from business to the QR code on a phone, including the wrong-link error and Skip for Google. The QR suggestions swipe one at a time with arrows and dots.
+
+**Limitations**
+
+- Nothing is real yet: sign-in, emails, Google connection and saving are simulated, and onboarding answers are lost when the tab closes.
+- The Google button must be replaced with Google's official button before launch.
+- The migration has not been pushed, and the database tests were not rerun. `database.types.ts` was edited by hand to match.
+- Internal mock names were renamed with a script; customer review text that says "location" was left as written.
 
 ## 2 Nov 2026 — Phase 2: database and security foundation
 

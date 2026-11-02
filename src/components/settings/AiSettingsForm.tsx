@@ -8,7 +8,7 @@ import { Field, SettingRow, TextArea } from "@/components/ui/Field";
 import { Menu } from "@/components/ui/Menu";
 import { Segmented } from "@/components/ui/Segmented";
 import { Icon } from "@/components/icons/Icon";
-import type { Location, Tone } from "@/lib/mock/types";
+import type { Branch, Tone } from "@/lib/mock/types";
 
 type Rule = "2" | "3" | "all";
 type Override = { tone: Tone | "default"; rule: Rule | "default" };
@@ -19,8 +19,8 @@ const ruleOptions: { value: Rule; label: string }[] = [
   { value: "all", label: "Every review" },
 ];
 
-/** Global reply defaults with per-location overrides. Saving is simulated. */
-export function AiSettingsForm({ locations, tones }: { locations: Location[]; tones: Tone[] }) {
+/** Global reply defaults with per-branch overrides. Saving is simulated. */
+export function AiSettingsForm({ branches, tones }: { branches: Branch[]; tones: Tone[] }) {
   const [tone, setTone] = useState<Tone>("Warm");
   const [rule, setRule] = useState<Rule>("3");
   const [auto, setAuto] = useState<"off" | "on">("off");
@@ -52,7 +52,7 @@ export function AiSettingsForm({ locations, tones }: { locations: Location[]; to
       }}
     >
       <Card className="px-5 py-5">
-        <SectionTitle>Defaults for all locations</SectionTitle>
+        <SectionTitle>Defaults for all branches</SectionTitle>
         <div className="mt-4">
           <SettingRow title="Reply tone" description="How AI drafts sound. You can still change the tone on any draft.">
             <div role="group" aria-label="Reply tone" className="flex flex-wrap gap-2">
@@ -108,11 +108,11 @@ export function AiSettingsForm({ locations, tones }: { locations: Location[]; to
 
       <Card className="overflow-hidden">
         <div className="px-5 pt-5 pb-3">
-          <SectionTitle>Location overrides</SectionTitle>
-          <p className="text-[12.5px] text-fg-muted">Anything set here replaces the defaults for that location.</p>
+          <SectionTitle>Branch overrides</SectionTitle>
+          <p className="text-[12.5px] text-fg-muted">Anything set here replaces the defaults for that branch.</p>
         </div>
         <ul className="border-t border-line">
-          {locations.map((l) => {
+          {branches.map((l) => {
             const o = overrides[l.id] ?? { tone: "default", rule: "default" };
             const custom = o.tone !== "default" || o.rule !== "default";
             return (
@@ -132,7 +132,7 @@ export function AiSettingsForm({ locations, tones }: { locations: Location[]; to
                     value={o.tone}
                     options={[{ value: "default", label: `Default (${tone})` }, ...tones.map((t) => ({ value: t, label: t }))]}
                     onChange={(v) => setOverride(l.id, { tone: v as Override["tone"] })}
-                    triggerClassName="inline-flex h-control-sm items-center gap-1.5 rounded-pill bg-surface px-3.5 text-[13px] font-semibold shadow-button-light hover:bg-row-hover"
+                    triggerClassName="inline-flex h-control-md items-center gap-1.5 rounded-pill bg-surface px-4 text-[14px] font-semibold shadow-button-light hover:bg-row-hover"
                     trigger={(c) => (
                       <>
                         Tone: {o.tone === "default" ? "Default" : c?.label}
@@ -149,7 +149,7 @@ export function AiSettingsForm({ locations, tones }: { locations: Location[]; to
                       ...ruleOptions,
                     ]}
                     onChange={(v) => setOverride(l.id, { rule: v as Override["rule"] })}
-                    triggerClassName="inline-flex h-control-sm items-center gap-1.5 rounded-pill bg-surface px-3.5 text-[13px] font-semibold shadow-button-light hover:bg-row-hover"
+                    triggerClassName="inline-flex h-control-md items-center gap-1.5 rounded-pill bg-surface px-4 text-[14px] font-semibold shadow-button-light hover:bg-row-hover"
                     trigger={(c) => (
                       <>
                         Approval: {o.rule === "default" ? "Default" : c?.label}

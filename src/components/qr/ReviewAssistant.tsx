@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { Icon } from "@/components/icons/Icon";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
-import { Card, Note } from "@/components/ui/Display";
+import { Card } from "@/components/ui/Display";
 import { TextArea } from "@/components/ui/Field";
 
 const ratingWords = ["", "Poor", "Disappointing", "Okay", "Good", "Excellent"];
@@ -41,6 +41,11 @@ function suggest(business: string, rating: number, attributes: string[], comment
 
 type Step = "input" | "loading" | "pick";
 
+/** Width of one slide in the suggestion carousel (slides are equal). */
+function slideWidth(track: HTMLElement) {
+  return (track.firstElementChild as HTMLElement | null)?.offsetWidth || track.clientWidth;
+}
+
 export function ReviewAssistant({
   business,
   googleUrl,
@@ -56,16 +61,24 @@ export function ReviewAssistant({
   const [picked, setPicked] = useState<string[]>([]);
   const [comment, setComment] = useState("");
   const [step, setStep] = useState<Step>("input");
-  const [options, setOptions] = useState<string[]>([]);
+  // One editable draft per suggestion; the slide in view is the chosen one.
+  const [drafts, setDrafts] = useState<string[]>([]);
   const [choice, setChoice] = useState(0);
-  const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const results = useRef<HTMLHeadingElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const ids = useId();
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  async function copy() {
+  function showSlide(i: number) {
+    const el = track.current;
+    if (!el) return;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollTo({ left: i * slideWidth(el), behavior: smooth ? "smooth" : "auto" });
+  }
+
+  async function copy(text: string) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -79,82 +92,114 @@ export function ReviewAssistant({
   if (aiPaused)
     return (
       <Card className="flex flex-col gap-4 p-5">
-        <h2 className="text-section font-bold">Share your experience on Google</h2>
-        <p className="text-[15px] leading-6 text-fg-muted">
-          Writing suggestions aren’t available right now. You can still leave a review directly on Google. Thank you for taking the time.
-        </p>
-        <a href={googleUrl} target="_blank" rel="noopener noreferrer" className={buttonClass({ variant: "primary", size: "lg", className: "w-full" })}>
-          Continue to Google
+        <h2 className="text-section font-bold">Thank you for visiting!</h2>
+        <p className="text-[15px] leading-6 text-fg-muted">Please write your review on Google.</p>
+        <a href={googleUrl} target="_blank" rel="noopener noreferrer" className={buttonClass({ variant: "primary", size: "md", className: "w-full" })}>
+          Write on Google
           <Icon name="external" size={16} />
         </a>
       </Card>
     );
 
-  if (step === "pick")
+  if (step === "pick") {
+    const text = drafts[choice] ?? "";
     return (
       <div className="flex flex-col gap-4">
         <Card className="flex flex-col gap-4 p-5">
           <div>
             <h2 ref={results} tabIndex={-1} className="text-section font-bold outline-none">
-              Pick a starting point
+              Pick a review
             </h2>
-            <p className="text-[13.5px] text-fg-muted">Edit it so it says what you want. It’s your review.</p>
+            <p className="text-[13.5px] text-fg-muted">Swipe to see more. Tap the text to change it.</p>
           </div>
-          <div role="radiogroup" aria-label="Suggestions" className="flex flex-col gap-2">
-            {options.map((o, i) => (
-              <button
+
+          <div
+            ref={track}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Review suggestions"
+            onScroll={(e) => {
+              const el = e.currentTarget;
+              const i = Math.round(el.scrollLeft / slideWidth(el));
+              if (i !== choice) {
+                setChoice(i);
+                setCopied(false);
+              }
+            }}
+            className="-mx-1 flex snap-x snap-mandatory overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {drafts.map((d, i) => (
+              <div
                 key={i}
-                type="button"
-                role="radio"
-                aria-checked={i === choice}
-                onClick={() => {
-                  setChoice(i);
-                  setText(o);
-                  setCopied(false);
-                }}
-                className={cn(
-                  "rounded-inner border px-4 py-3 text-left text-[15px] leading-[23px] transition-colors",
-                  i === choice ? "border-selection-line bg-selection" : "border-line bg-surface hover:bg-row-hover",
-                )}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${drafts.length}`}
+                className="w-full flex-none snap-center px-1"
               >
-                {o}
-              </button>
+                <TextArea
+                  aria-label={`Suggestion ${i + 1}, you can edit it`}
+                  rows={6}
+                  value={d}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setDrafts((all) => all.map((x, j) => (j === i ? v : x)));
+                    setCopied(false);
+                  }}
+                  className="resize-none bg-selection text-[16px] leading-6"
+                />
+              </div>
             ))}
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor={`${ids}-text`} className="text-label font-semibold">
-              Your review
-            </label>
-            <TextArea id={`${ids}-text`} rows={5} value={text} onChange={(e) => {
-                setText(e.target.value);
-                setCopied(false);
-              }} />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Button size="lg" icon={copied ? "check" : "copy"} onClick={copy} disabled={!text.trim()} className="w-full">
-              {copied ? "Copied" : "Copy text"}
-            </Button>
-            <a
-              href={googleUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={copy}
-              className={buttonClass({ variant: "primary", size: "lg", className: "w-full" })}
-            >
-              Continue to Google
-              <Icon name="external" size={16} />
-            </a>
-            <span role="status" aria-live="polite" className="sr-only">
-              {copied ? "Review text copied" : ""}
-            </span>
-          </div>
-          <Note icon="shield">On Google, paste your text, choose your stars and post it yourself. Nothing is posted for you.</Note>
+
+          {drafts.length > 1 && (
+            <div className="flex items-center justify-between">
+              <Button
+                variant="light"
+                icon="chevron-left"
+                aria-label="Previous suggestion"
+                disabled={choice === 0}
+                onClick={() => showSlide(choice - 1)}
+              />
+              <div className="flex items-center gap-1.5" aria-hidden="true">
+                {drafts.map((_, i) => (
+                  <span key={i} className={cn("h-1.5 rounded-pill transition-all", i === choice ? "w-5 bg-primary" : "w-1.5 bg-control")} />
+                ))}
+              </div>
+              <Button
+                variant="light"
+                icon="chevron-right"
+                aria-label="Next suggestion"
+                disabled={choice === drafts.length - 1}
+                onClick={() => showSlide(choice + 1)}
+              />
+            </div>
+          )}
+          <p aria-live="polite" className="sr-only">
+            Suggestion {choice + 1} of {drafts.length}
+          </p>
+
+          <a
+            href={googleUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => copy(text)}
+            aria-disabled={!text.trim() || undefined}
+            className={buttonClass({ variant: "primary", size: "md", className: "w-full" })}
+          >
+            {copied ? "Copied! Opening Google" : "Copy and open Google"}
+            <Icon name="external" size={16} />
+          </a>
+          <span role="status" aria-live="polite" className="sr-only">
+            {copied ? "Review copied" : ""}
+          </span>
+          <p className="text-center text-[13px] text-fg-muted">On Google, paste it, give stars and post.</p>
         </Card>
         <Button variant="text" icon="chevron-left" onClick={() => setStep("input")} className="self-center">
-          Change my answers
+          Change answers
         </Button>
       </div>
     );
+  }
 
   return (
     <form
@@ -163,10 +208,9 @@ export function ReviewAssistant({
         e.preventDefault();
         setStep("loading");
         timer.current = setTimeout(() => {
-          const next = suggest(business, rating, picked, comment);
-          setOptions(next);
+          setDrafts(suggest(business, rating, picked, comment));
           setChoice(0);
-          setText(next[0]);
+          setCopied(false);
           setStep("pick");
           requestAnimationFrame(() => results.current?.focus());
         }, 900);
@@ -196,12 +240,11 @@ export function ReviewAssistant({
         </fieldset>
 
         <fieldset>
-          <legend className="text-label font-semibold">Anything that stood out? (optional)</legend>
+          <legend className="text-label font-semibold">What did you notice? (optional)</legend>
           <div className="mt-2.5 flex flex-wrap gap-2">
             {attributes.map((a) => (
               <Chip
                 key={a}
-                size="lg"
                 pressed={picked.includes(a)}
                 onClick={() => setPicked((p) => (p.includes(a) ? p.filter((x) => x !== a) : [...p, a]))}
               >
@@ -213,7 +256,7 @@ export function ReviewAssistant({
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`${ids}-comment`} className="text-label font-semibold">
-            In your own words (optional)
+            Anything else? (optional)
           </label>
           <TextArea
             id={`${ids}-comment`}
@@ -221,7 +264,7 @@ export function ReviewAssistant({
             maxLength={500}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="e.g. We came for a birthday lunch"
+            placeholder="e.g. Came for a birthday lunch"
             className="text-[16px]"
           />
         </div>
@@ -229,16 +272,16 @@ export function ReviewAssistant({
         <Button
           type="submit"
           variant="primary"
-          size="lg"
+          size="md"
           icon="sparkle"
           loading={step === "loading"}
           disabled={!rating || step === "loading"}
           className="w-full"
         >
-          {step === "loading" ? "Writing suggestions…" : "Get suggestions"}
+          {step === "loading" ? "Writing…" : "Help me write"}
         </Button>
         <a href={googleUrl} target="_blank" rel="noopener noreferrer" className="self-center text-[13px] font-semibold text-primary-text hover:underline">
-          Skip and write on Google
+          I’ll write it myself on Google
         </a>
       </Card>
     </form>

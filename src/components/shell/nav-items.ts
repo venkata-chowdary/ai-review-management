@@ -18,7 +18,7 @@ export const navItems: NavItem[] = [
   { href: "/insights", label: "Insights", short: "Insights", icon: "insights", group: "workspace", primary: true },
   { href: "/qr-codes", label: "QR codes", short: "QR", icon: "qr", group: "workspace", primary: true },
   { href: "/ai-replies", label: "AI replies", short: "AI", icon: "sliders", group: "workspace" },
-  { href: "/locations", label: "Locations", short: "Locations", icon: "store", group: "account" },
+  { href: "/branches", label: "Branches", short: "Branches", icon: "store", group: "account" },
   { href: "/billing", label: "Billing", short: "Billing", icon: "card", group: "account" },
   { href: "/settings", label: "Settings", short: "Settings", icon: "settings", group: "account" },
 ];

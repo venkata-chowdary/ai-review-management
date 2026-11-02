@@ -7,7 +7,8 @@ import { cn } from "@/lib/cn";
 import { Icon } from "@/components/icons/Icon";
 import { Meter, UsageRing } from "@/components/ui/Display";
 import { Sheet } from "@/components/ui/Sheet";
-import { LocationSwitcherFallback, PillLocationSwitcher, SidebarLocationSwitcher } from "./LocationSwitcher";
+import { signOut } from "@/lib/auth/actions";
+import { BranchSwitcherFallback, PillBranchSwitcher, SidebarBranchSwitcher } from "./BranchSwitcher";
 import { isActive, navItems, type NavItem } from "./nav-items";
 
 type Counts = { needsReply: number };
@@ -16,7 +17,7 @@ type Account = { initials: string; name: string; plan: string };
 
 type LinkProps = { counts: Counts; query: string };
 
-// The selected location (?loc=) follows you between pages.
+// The selected branch (?loc=) follows you between pages.
 function href(item: NavItem, query: string) {
   return query ? `${item.href}?${query}` : item.href;
 }
@@ -78,8 +79,8 @@ export function Sidebar({ counts, usage, account }: { counts: Counts; usage: Usa
       aria-label="Navigation"
       className="glass sticky top-0 z-20 hidden h-dvh w-sidebar flex-none flex-col gap-0.5 overflow-y-auto bg-sidebar px-3.5 py-[18px] text-sidebar-fg lg:flex"
     >
-      <Suspense fallback={<LocationSwitcherFallback variant="sidebar" />}>
-        <SidebarLocationSwitcher />
+      <Suspense fallback={<BranchSwitcherFallback variant="sidebar" />}>
+        <SidebarBranchSwitcher />
       </Suspense>
       <p className="px-2.5 pt-4 pb-1.5 text-[11px] font-bold tracking-[.08em] text-sidebar-muted uppercase">Workspace</p>
       <nav aria-label="Main" className="flex flex-col gap-0.5">
@@ -105,6 +106,11 @@ export function Sidebar({ counts, usage, account }: { counts: Counts; usage: Usa
           {account.name}
           <small className="block text-[11.5px] font-medium text-sidebar-muted">{account.plan}</small>
         </span>
+        <form action={signOut} className="ml-auto">
+          <button type="submit" className="rounded-pill px-2.5 py-1 text-[12px] font-semibold text-sidebar-muted hover:bg-row-hover hover:text-sidebar-fg">
+            Sign out
+          </button>
+        </form>
       </div>
     </aside>
   );
@@ -252,8 +258,8 @@ export function BottomTabs({ counts, usage, account }: { counts: Counts; usage: 
       </nav>
       <Sheet open={more} onClose={() => setMore(false)} label="More">
         <div className="flex flex-col gap-5 p-4">
-          <Suspense fallback={<LocationSwitcherFallback variant="pill" />}>
-            <PillLocationSwitcher />
+          <Suspense fallback={<BranchSwitcherFallback variant="pill" />}>
+            <PillBranchSwitcher />
           </Suspense>
           <nav aria-label="More pages" className="flex flex-col gap-1">
             <QueryAware render={(query) => <MoreLinks query={query} onNavigate={() => setMore(false)} />} />
@@ -274,6 +280,11 @@ export function BottomTabs({ counts, usage, account }: { counts: Counts; usage: 
               {account.name}
               <small className="block text-[11.5px] font-medium text-fg-muted">{account.plan}</small>
             </span>
+            <form action={signOut} className="ml-auto">
+              <button type="submit" className="rounded-pill px-2.5 py-1 text-[12.5px] font-semibold text-fg-muted hover:bg-row-hover hover:text-fg">
+                Sign out
+              </button>
+            </form>
           </div>
         </div>
       </Sheet>

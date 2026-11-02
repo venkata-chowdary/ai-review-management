@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/Display";
 import { Page, PageHeader } from "@/components/ui/Page";
 import { CardsSkeleton, EmptyState } from "@/components/ui/States";
 import { tones } from "@/lib/mock/data";
-import { demoState, getLocations } from "@/lib/mock/loaders";
+import { demoState, getBranches } from "@/lib/mock/loaders";
 
 export const metadata: Metadata = { title: "AI replies" };
 
@@ -25,14 +25,14 @@ export default function AiRepliesPage({ searchParams }: PageProps<"/ai-replies">
 async function AiRepliesContent({ searchParams }: Pick<PageProps<"/ai-replies">, "searchParams">) {
   const state = demoState((await searchParams).state);
   if (state === "loading") return <CardsSkeleton label="Loading AI settings" />;
-  const locations = await getLocations({ state });
-  if (locations.length === 0)
+  const branches = await getBranches({ state });
+  if (branches.length === 0)
     return (
       <Card>
-        <EmptyState icon="sliders" title="Add a location first" action={<ButtonLink href="/locations">Go to Locations</ButtonLink>}>
-          Reply settings apply per location, with shared defaults.
+        <EmptyState icon="sliders" title="Add a branch first" action={<ButtonLink href="/branches">Go to Branches</ButtonLink>}>
+          Reply settings apply per branch, with shared defaults.
         </EmptyState>
       </Card>
     );
-  return <AiSettingsForm locations={locations} tones={tones} />;
+  return <AiSettingsForm branches={branches} tones={tones} />;
 }

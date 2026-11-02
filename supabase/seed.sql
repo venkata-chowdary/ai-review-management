@@ -17,14 +17,14 @@ insert into auth.users (
   );
 
 -- The signup trigger has already created one business per user.
-update public.businesses set name = 'Cafe A' where user_id = '11111111-1111-1111-1111-111111111111';
-update public.businesses set name = 'Cafe B' where user_id = '22222222-2222-2222-2222-222222222222';
+update public.businesses set name = 'Cafe A', business_type = 'Café', onboarding_step = 'done' where user_id = '11111111-1111-1111-1111-111111111111';
+update public.businesses set name = 'Cafe B', business_type = 'Café', onboarding_step = 'done' where user_id = '22222222-2222-2222-2222-222222222222';
 
-insert into public.locations (business_id, user_id, branch_name, address)
-select id, user_id, 'Downtown', '12 Main St' from public.businesses where name = 'Cafe A'
+insert into public.branches (business_id, user_id, name, google_maps_url)
+select id, user_id, 'Downtown', 'https://maps.app.goo.gl/demoDowntownA' from public.businesses where name = 'Cafe A'
 union all
-select id, user_id, 'Riverside', '4 River Rd' from public.businesses where name = 'Cafe A'
+select id, user_id, 'Riverside', 'https://maps.app.goo.gl/demoRiversideA' from public.businesses where name = 'Cafe A'
 union all
-select id, user_id, 'Airport', 'Terminal 2' from public.businesses where name = 'Cafe B'
+select id, user_id, 'Airport', 'https://maps.app.goo.gl/demoAirportB' from public.businesses where name = 'Cafe B'
 union all
-select id, user_id, 'Old Town', '9 Castle Ln' from public.businesses where name = 'Cafe B';
+select id, user_id, 'Old Town', 'https://maps.app.goo.gl/demoOldTownB' from public.businesses where name = 'Cafe B';

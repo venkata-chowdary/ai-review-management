@@ -4,10 +4,11 @@ export type ReplyStatus = "draft" | "awaiting" | "queued" | "published" | "faile
 export type Sentiment = "positive" | "neutral" | "negative";
 export type Tone = "Warm" | "Friendly" | "Professional" | "Formal";
 
-export type Location = {
+export type Branch = {
   id: string;
   name: string;
-  address: string;
+  /** The branch on Google Maps, as the owner pasted it in onboarding. */
+  googleMapsUrl: string;
   googleConnected: boolean;
   /** QR codes resolve to /r/{qrCode}. */
   qrCode: string;
@@ -23,7 +24,7 @@ export type Review = {
   reviewer: string;
   rating: 1 | 2 | 3 | 4 | 5;
   text: string;
-  locationId: string;
+  branchId: string;
   status: ReplyStatus;
   sentiment: Sentiment;
   /** Minutes since the review arrived; drives sorting and "2d" labels. */

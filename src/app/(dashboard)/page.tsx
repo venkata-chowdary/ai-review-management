@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { DateRange } from "@/components/overview/DateRange";
 import { ActionQueue, KpiGrid, OverviewSkeleton, RatingBreakdown, RecentReviews } from "@/components/overview/Overview";
-import { LocationSwitcherFallback, PillLocationSwitcher } from "@/components/shell/LocationSwitcher";
+import { BranchSwitcherFallback, PillBranchSwitcher } from "@/components/shell/BranchSwitcher";
 import { today } from "@/lib/mock/data";
 import { demoState, getOverview } from "@/lib/mock/loaders";
 import { locQuery, one } from "@/lib/search-params";
@@ -18,8 +18,8 @@ export default function OverviewPage({ searchParams }: PageProps<"/">) {
           <h1 className="text-[28px] leading-[34px] font-bold tracking-[-0.02em]">{today.greeting}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Suspense fallback={<LocationSwitcherFallback variant="pill" />}>
-            <PillLocationSwitcher align="end" />
+          <Suspense fallback={<BranchSwitcherFallback variant="pill" />}>
+            <PillBranchSwitcher align="end" />
           </Suspense>
           <DateRange align="end" />
         </div>
@@ -37,7 +37,7 @@ async function OverviewContent({ searchParams }: Pick<PageProps<"/">, "searchPar
   if (state === "loading") return <OverviewSkeleton />;
 
   const loc = one(params.loc);
-  const data = await getOverview({ state, locationId: loc });
+  const data = await getOverview({ state, branchId: loc });
   const query = locQuery(loc);
 
   return (

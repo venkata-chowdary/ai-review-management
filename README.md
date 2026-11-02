@@ -35,7 +35,7 @@ Seed users: `owner-a@example.com` and `owner-b@example.com`, password `password1
 |---|---|
 | `/` | Overview home: action queue, KPIs, recent reviews, rating breakdown |
 | `/reviews` | Inbox split: review list and detail with the AI draft. `?tab=`, `?q=`, `?id=` |
-| `/insights`, `/qr-codes`, `/ai-replies`, `/locations`, `/billing`, `/settings` | Provisional screens composed from the design system |
+| `/insights`, `/qr-codes`, `/ai-replies`, `/billing`, `/settings` | Provisional screens composed from the design system |
 | `/r/demo-downtown`, `/r/demo-riverside` | Public QR review page. `/r/demo-airport` shows the "AI paused" fallback, and `?ai=paused` forces it on any page |
 
 The location picker writes `?loc=`. The Overview and Reviews pages filter by it, and navigation links keep it.

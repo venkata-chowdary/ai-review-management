@@ -1,11 +1,10 @@
-import { BottomTabs, IconRail, Sidebar } from "@/components/shell/Navigation";
-import { account, usage } from "@/lib/mock/data";
-import { getNavCounts } from "@/lib/mock/loaders";
+import { Suspense } from "react";
+import { DashboardShell } from "@/components/shell/DashboardShell";
 
 // App shell: glass sidebar (≥1024px), icon rail (768–1023px),
-// bottom tab bar (<768px).
+// bottom tab bar (<768px). The shell itself loads behind Suspense because it
+// reads the session.
 export default function DashboardLayout({ children }: LayoutProps<"/">) {
-  const counts = getNavCounts();
   return (
     <div className="flex min-h-dvh flex-1">
       <a
@@ -14,12 +13,9 @@ export default function DashboardLayout({ children }: LayoutProps<"/">) {
       >
         Skip to content
       </a>
-      <Sidebar counts={counts} usage={usage} account={account} />
-      <IconRail counts={counts} usage={usage} account={account} />
-      <div id="main" className="flex min-w-0 flex-1 flex-col pb-24 md:pb-0">
-        {children}
-      </div>
-      <BottomTabs counts={counts} usage={usage} account={account} />
+      <Suspense fallback={<div className="min-w-0 flex-1" aria-busy="true" />}>
+        <DashboardShell>{children}</DashboardShell>
+      </Suspense>
     </div>
   );
 }

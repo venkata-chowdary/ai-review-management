@@ -6,7 +6,7 @@ import { ReviewAssistant } from "@/components/qr/ReviewAssistant";
 import { Card } from "@/components/ui/Display";
 import { Skeleton } from "@/components/ui/States";
 import { businessName, qrAttributes } from "@/lib/mock/data";
-import { getLocationByQrCode } from "@/lib/mock/loaders";
+import { getBranchByQrCode } from "@/lib/mock/loaders";
 import { one } from "@/lib/search-params";
 
 export const metadata: Metadata = { title: "Leave a review", robots: { index: false } };
@@ -20,7 +20,7 @@ export default function QrReviewPage({ params, searchParams }: PageProps<"/r/[co
         <QrReview params={params} searchParams={searchParams} />
       </Suspense>
       <footer className="mt-auto text-center text-[12px] leading-[18px] text-fg-muted">
-        No sign-up needed. We don’t ask for your name or contact details.
+        No login needed. We don’t ask for your name or number.
       </footer>
     </main>
   );
@@ -28,10 +28,10 @@ export default function QrReviewPage({ params, searchParams }: PageProps<"/r/[co
 
 async function QrReview({ params, searchParams }: Pick<PageProps<"/r/[code]">, "params" | "searchParams">) {
   const { code } = await params;
-  const location = getLocationByQrCode(code);
-  if (!location) notFound();
+  const branch = getBranchByQrCode(code);
+  if (!branch) notFound();
   // ?ai=paused previews the fallback on any page.
-  const aiPaused = location.aiPaused || one((await searchParams).ai) === "paused";
+  const aiPaused = branch.aiPaused || one((await searchParams).ai) === "paused";
 
   return (
     <>
@@ -41,12 +41,12 @@ async function QrReview({ params, searchParams }: Pick<PageProps<"/r/[code]">, "
         </span>
         <div>
           <h1 className="text-[20px] leading-[26px] font-bold tracking-[-0.01em]">{businessName}</h1>
-          <p className="text-[13px] text-fg-muted">{location.name}</p>
+          <p className="text-[13px] text-fg-muted">{branch.name}</p>
         </div>
       </header>
       <ReviewAssistant
         business={businessName}
-        googleUrl={`https://search.google.com/local/writereview?placeid=${encodeURIComponent(location.placeId)}`}
+        googleUrl={`https://search.google.com/local/writereview?placeid=${encodeURIComponent(branch.placeId)}`}
         attributes={qrAttributes}
         aiPaused={aiPaused}
       />
